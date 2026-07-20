@@ -2,1365 +2,1061 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="RX3i详解">
-<title>RX3i 项目实战知识库</title>
+<meta name="apple-mobile-web-app-title" content="RX3i项目分析">
+<meta name="theme-color" content="#1e3a8a">
+<meta name="format-detection" content="telephone=no">
+<title>艾默生RX3i · 项目应用分析</title>
 <style>
+:root{--primary:#1a56db;--primary-light:#3b82f6;--primary-dark:#1e3a8a;--accent:#f59e0b;--success:#10b981;--danger:#ef4444;--bg:#f0f4f8;--card-bg:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;--code-bg:#f8fafc;--formula-bg:#fef3c7;--tip-bg:#dbeafe;--warn-bg:#fee2e2;--example-bg:#d1fae5}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.75;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
-.header{text-align:center;padding:20px 0 12px;position:sticky;top:0;background:#0d1117;z-index:100;border-bottom:1px solid #21262d}
-.header h1{font-size:20px;color:#58a6ff}
-.header p{font-size:12px;color:#6e7681;margin-top:4px}
-.back-link{display:inline-block;color:#58a6ff;font-size:13px;text-decoration:none;margin-bottom:8px}
-.nav{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;padding:6px 0 12px}
-.nav-item{padding:5px 11px;background:#161b22;border:1px solid #21262d;border-radius:14px;font-size:11px;color:#8b949e;cursor:pointer;white-space:nowrap;transition:all .2s}
-.nav-item.active{background:#1f6feb;border-color:#388bfd;color:#fff}
-.section{margin-bottom:28px;display:none;scroll-margin-top:80px}
-.section.active{display:block}
-.section-title{font-size:17px;color:#58a6ff;font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:8px}
-.section-icon{font-size:20px}
-.card{background:#161b22;border:1px solid #21262d;border-radius:10px;padding:14px;margin-bottom:10px}
-.card h3{font-size:14px;color:#f0f6fc;margin-bottom:6px}
-.card p,.card li{font-size:13px;color:#8b949e}
-.card ul{padding-left:16px;margin:6px 0}
-.card li{margin-bottom:3px}
-.card strong{color:#c9d1d9}
-.tag{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:600;margin-right:3px}
-.tag-hw{background:rgba(239,68,68,.15);color:#f87171}
-.tag-sw{background:rgba(168,85,247,.15);color:#c084fc}
-.tag-com{background:rgba(16,185,129,.15);color:#34d399}
-.tag-fb{background:rgba(59,130,246,.15);color:#60a5fa}
-.tag-scada{background:rgba(245,158,11,.15);color:#fbbf24}
-table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12px}
-th{background:#21262d;color:#c9d1d9;padding:6px;text-align:left;border:1px solid #30363d}
-td{padding:6px;border:1px solid #21262d;color:#8b949e}
-code{background:#21262d;padding:2px 5px;border-radius:4px;font-size:12px;color:#f0883e;font-family:Consolas,monospace}
-.formula{background:#161b22;border-left:3px solid #1f6feb;padding:10px 14px;margin:6px 0;border-radius:0 6px 6px 0;font-family:Consolas,monospace;font-size:12px;color:#7ee787;white-space:pre-wrap;overflow-x:auto}
-.note{background:rgba(31,110,235,.08);border:1px solid rgba(31,110,235,.2);border-radius:6px;padding:10px;margin:6px 0;font-size:12px;color:#8b949e}
-.note::before{content:""}
-.warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:6px;padding:10px;margin:6px 0;font-size:12px;color:#f87171}
-.warn::before{content:""}
-.example{background:#161b22;border:1px solid #21262d;border-radius:6px;padding:10px;margin:6px 0}
-.example h4{font-size:13px;color:#fbbf24;margin-bottom:6px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;font-size:15px}
+.topbar{position:fixed;top:0;left:0;right:0;height:60px;background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;display:flex;align-items:center;padding:0 24px;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar h1{font-size:18px;font-weight:700}.topbar .sub{font-size:12px;opacity:.8;margin-left:12px}
+.sidebar{position:fixed;top:60px;left:0;bottom:0;width:260px;background:var(--card-bg);overflow-y:auto;padding:16px 0;border-right:1px solid var(--border);z-index:900}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.nav-item{display:block;padding:10px 20px;cursor:pointer;font-size:14px;color:var(--text-light);border-left:3px solid transparent;transition:all .2s;text-decoration:none}
+.nav-item:hover{background:#f1f5f9;color:var(--primary)}
+.nav-item.active{background:#eff6ff;color:var(--primary);font-weight:600;border-left-color:var(--primary)}
+.nav-item .ch-num{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;background:var(--border);font-size:11px;margin-right:8px;color:var(--text)}
+.nav-item.active .ch-num{background:var(--primary);color:#fff}
+.main{margin-left:260px;margin-top:60px;padding:32px 40px 80px;max-width:1000px}
+.chapter{display:none}.chapter.active{display:block}
+.chapter-header{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:32px;border-radius:12px;margin-bottom:24px}
+.chapter-header .ch-tag{display:inline-block;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:20px;font-size:12px;margin-bottom:8px}
+.chapter-header h2{font-size:24px;margin-bottom:8px}.chapter-header .ch-desc{font-size:14px;opacity:.85}
+.kp-card{background:var(--card-bg);border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid var(--border);transition:box-shadow .2s}
+.kp-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.kp-title{font-size:18px;font-weight:700;color:var(--primary-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kp-title .badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:400}
+.badge-concept{background:#dbeafe;color:var(--primary)}.badge-formula{background:var(--formula-bg);color:#92400e}.badge-tool{background:#d1fae5;color:#065f46}.badge-method{background:#fce7f3;color:#9f1239}.badge-practice{background:#e0e7ff;color:#3730a3}
+.kp-content{font-size:14px;line-height:2}
+.kp-content h4{font-size:15px;color:var(--primary);margin:16px 0 8px;padding-left:10px;border-left:3px solid var(--primary-light)}
+.kp-content p{margin-bottom:10px}.kp-content ul,.kp-content ol{margin:8px 0 12px 24px}.kp-content li{margin-bottom:6px}
+.kp-content strong{color:var(--primary-dark)}
+.kp-content table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.kp-content th{background:var(--primary);color:#fff;padding:8px 12px;text-align:left;font-weight:600}
+.kp-content td{padding:8px 12px;border-bottom:1px solid var(--border)}.kp-content tr:nth-child(even){background:#f8fafc}
+.kp-content code{background:var(--code-bg);padding:2px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:13px;color:var(--danger)}
+.formula-block{background:var(--formula-bg);border:1px solid #fcd34d;border-radius:8px;padding:16px;margin:12px 0;font-size:14px}
+.formula-block .formula-label{font-size:12px;color:#92400e;font-weight:600;margin-bottom:6px}
+.formula-block .formula{font-family:'Courier New',monospace;font-size:14px;white-space:pre-wrap;padding:8px 0;color:#1e293b}
+.tip-box{background:var(--tip-bg);border-left:4px solid var(--primary-light);border-radius:4px;padding:12px 16px;margin:12px 0;font-size:13px}
+.tip-box .tip-label{font-weight:700;color:var(--primary);font-size:12px;display:block;margin-bottom:4px}
+.warn-box{background:var(--warn-bg);border-left:4px solid var(--danger);border-radius:4px;padding:12px 16px;margin:12px 0;font-size:13px}
+.warn-box .warn-label{font-weight:700;color:var(--danger);font-size:12px;display:block;margin-bottom:4px}
+.example-box{background:var(--example-bg);border-left:4px solid var(--success);border-radius:4px;padding:12px 16px;margin:12px 0;font-size:13px}
+.example-box .ex-label{font-weight:700;color:#065f46;font-size:12px;display:block;margin-bottom:4px}
+.back-top{position:fixed;bottom:32px;right:32px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;cursor:pointer;font-size:20px;opacity:0;transition:opacity .3s;z-index:800;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.back-top.show{opacity:1}.back-top:hover{background:var(--primary-dark)}
+.search-box{margin:12px 16px;position:relative}
+.search-box input{width:100%;padding:8px 12px 8px 32px;border:1px solid var(--border);border-radius:20px;font-size:13px;outline:none}
+.search-box input:focus{border-color:var(--primary)}
+.search-box::before{content:'\1F50D';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px}
+.menu-btn{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;margin-right:12px;padding:4px 8px;flex-shrink:0}
+.sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:850;opacity:0;transition:opacity .3s}
+.sidebar-overlay.show{display:block;opacity:1}
+@media(max-width:768px){
+  .menu-btn{display:block}
+  .topbar{padding:0 12px;padding-top:env(safe-area-inset-top);height:calc(60px + env(safe-area-inset-top))}
+  .topbar h1{font-size:15px}
+  .topbar .sub{display:none}
+  .sidebar{transform:translateX(-100%);transition:transform .3s ease;width:240px;top:calc(60px + env(safe-area-inset-top));box-shadow:2px 0 12px rgba(0,0,0,.15)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;margin-top:calc(60px + env(safe-area-inset-top));padding:16px 12px 100px;max-width:100%}
+  .chapter-header{padding:20px 16px;border-radius:10px}
+  .chapter-header h2{font-size:20px}
+  .chapter-header .ch-desc{font-size:13px}
+  .kp-card{padding:14px 12px;border-radius:8px}
+  .kp-title{font-size:16px}
+  .kp-content{font-size:13px;line-height:1.9}
+  .kp-content h4{font-size:14px}
+  .kp-content table{font-size:12px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
+  .kp-content ul,.kp-content ol{margin:8px 0 12px 20px}
+  .formula-block{padding:12px 10px;font-size:13px;overflow-x:auto}
+  .formula-block .formula{font-size:13px}
+  .tip-box,.warn-box,.example-box{padding:10px 12px;font-size:12px}
+  .back-top{bottom:20px;right:16px;width:40px;height:40px;font-size:18px}
+  body{padding-top:env(safe-area-inset-top)}
+}
 </style>
 </head>
 <body>
-<div class="header">
-<a href="rx3i.html" class="back-link">返回</a>
-<h1>RX3i 项目实战知识库</h1>
-<p>基于培训教材整理 | PME 9.7 | PACSystems</p>
-<div class="nav">
-<span class="nav-item active" onclick="go(event,'s1')">程序框架</span>
-<span class="nav-item" onclick="go(event,'s2')">变量与内存</span>
-<span class="nav-item" onclick="go(event,'s3')">块与UDFB</span>
-<span class="nav-item" onclick="go(event,'s4')">LD指令</span>
-<span class="nav-item" onclick="go(event,'s5')">ST编程</span>
-<span class="nav-item" onclick="go(event,'s6')">通信</span>
-<span class="nav-item" onclick="go(event,'s7')">硬件配置</span>
-<span class="nav-item" onclick="go(event,'s8')">PID控制</span>
-<span class="nav-item" onclick="go(event,'s9')">中断</span>
-<span class="nav-item" onclick="go(event,'s10')">系统变量</span>
-<span class="nav-item" onclick="go(event,'s11')">Cimplicity</span>
-<span class="nav-item" onclick="go(event,'s12')">故障处理</span>
-<span class="nav-item" onclick="go(event,'s13')">调试技巧</span>
+<div class="topbar"><button class="menu-btn" onclick="toggleSidebar()">&#9776;</button><h1>艾默生RX3i · 项目应用分析</h1><span class="sub">10大模块 · 项目架构 · 编程实战 · 通信配置 · 调试投运</span></div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+<div class="search-box"><input type="text" id="searchInput" placeholder="搜索内容..." oninput="searchKP()"></div>
+<a class="nav-item active" onclick="showChapter(1)"><span class="ch-num">1</span>项目架构</a>
+<a class="nav-item" onclick="showChapter(2)"><span class="ch-num">2</span>程序框架</a>
+<a class="nav-item" onclick="showChapter(3)"><span class="ch-num">3</span>变量与内存</a>
+<a class="nav-item" onclick="showChapter(4)"><span class="ch-num">4</span>UDFB编程</a>
+<a class="nav-item" onclick="showChapter(5)"><span class="ch-num">5</span>LD与ST编程</a>
+<a class="nav-item" onclick="showChapter(6)"><span class="ch-num">6</span>通信网络</a>
+<a class="nav-item" onclick="showChapter(7)"><span class="ch-num">7</span>PID控制</a>
+<a class="nav-item" onclick="showChapter(8)"><span class="ch-num">8</span>Cimplicity</a>
+<a class="nav-item" onclick="showChapter(9)"><span class="ch-num">9</span>中断与系统</a>
+<a class="nav-item" onclick="showChapter(10)"><span class="ch-num">10</span>故障与调试</a>
 </div>
-</div>
+<div class="main" id="main">
 
-<!-- ============ 1. 程序框架 ============ -->
-<div class="section active" id="s1">
-<div class="section-title"><span class="section-icon">🏗️</span>一、程序框架与项目结构</div>
+<!-- ========== 第一章 项目架构与系统设计 ========== -->
+<div class="chapter active" id="ch1">
+<div class="chapter-header"><span class="ch-tag">第一章</span><h2>项目架构与系统设计</h2><div class="ch-desc">典型项目系统架构、硬件选型、网络拓扑、PME工程结构总览</div></div>
 
-<div class="card">
-<h3><span class="tag tag-sw">PME</span>PME 工程结构</h3>
-<div class="formula">Project (工程, 最多32个Target)
-├─ Target 1: PAC控制器 (RX3i CPU)
-│   ├─ Hardware Configuration (硬件组态 HWC)
-│   │   ├─ CPU模块 (CPE305/310/330/400)
-│   │   ├─ 电源模块
-│   │   ├─ I/O模块 (DI/DO/AI/AO/HSC)
-│   │   ├─ 通信模块 (ETM001/PNC001)
-│   │   └─ 扩展机架/远程IO站
-│   ├─ Logic (程序逻辑)
-│   │   ├─ _MAIN (主程序块, 自动执行)
-│   │   ├─ Program Block (程序块)
-│   │   ├─ Parameter Block (参数块)
-│   │   ├─ UDFB (用户自定义功能块)
-│   │   └─ External Block (外部C块)
-│   ├─ EGD (以太网全局数据配置)
-│   ├─ Motion / PACMotion (运动控制)
-│   ├─ VersaSafe (安全控制)
-│   └─ DLB (诊断逻辑块)
-├─ Target 2: 触摸屏 (View)
-│   └─ 画面组态
-└─ Variables (共享变量表)</div>
-</div>
+<div class="kp-card" id="kp1-1"><div class="kp-title">1.1 典型项目系统架构 <span class="badge badge-concept">架构</span></div><div class="kp-content">
+<p>一个完整的RX3i项目通常由<strong>三层架构</strong>组成：</p>
+<table><tr><th>层级</th><th>组件</th><th>功能</th><th>典型设备</th></tr>
+<tr><td>现场层</td><td>传感器/执行器</td><td>采集信号、执行动作</td><td>温度变送器、电机、阀门</td></tr>
+<tr><td>控制层</td><td>PACSystems RX3i</td><td>逻辑运算、PID控制、数据处理</td><td>CPE305/310/330/400</td></tr>
+<tr><td>监控层</td><td>Cimplicity SCADA</td><td>画面监视、报警管理、数据记录</td><td>Cimplicity Server+Viewer</td></tr></table>
+<div class="example-box"><span class="ex-label">实际项目架构示例</span>
+<p>以一条生产线为例，系统架构如下：</p>
+<ul><li><strong>RX3i CPU</strong>：CPE330，2MB用户内存，背板总线控制</li><li><strong>I/O模块</strong>：IC695系列数字量16点输入x4块、16点输出x3块、模拟量8通道输入x6块、4通道输出x2块</li><li><strong>通信</strong>：CPU以太网口接Cimplicity Server + 触摸屏；串口模块接变频器(Modbus RTU)</li><li><strong>上位机</strong>：1台Cimplicity Server + 2台Viewer，双网卡分别接PLC网和管理网</li><li><strong>远程I/O</strong>：通过Profinet或Genius总线扩展远程站</li></ul></div>
+</div></div>
 
-<div class="card">
-<h3><span class="tag tag-sw">PME</span>PME 界面核心窗口</h3>
-<table>
-<tr><th>窗口</th><th>功能</th><th>推荐状态</th></tr>
-<tr><td>Navigator</td><td>工程和对象导航树，最主要操作入口</td><td>始终开启</td></tr>
-<tr><td>Inspector</td><td>显示当前选中条目的属性参数</td><td>始终开启</td></tr>
-<tr><td>Feedback Zone</td><td>操作信息反馈（错误/警告）</td><td>始终开启</td></tr>
-<tr><td>InfoViewer</td><td>在线帮助和故障表显示</td><td>按需</td></tr>
-<tr><td>Toolchest</td><td>系统工具箱，拖放指令</td><td>按需</td></tr>
-<tr><td>Data Watch</td><td>在线调试时显示/修改变量值</td><td>调试时开</td></tr>
-<tr><td>LAN View</td><td>显示Profinet网络结构</td><td>配置PN时开</td></tr>
-<tr><td>Reference View</td><td>交叉引用，查看地址使用情况</td><td>按需</td></tr>
-</table>
-<div class="note">右键菜单是最主要的操作方式。不同对象右键菜单不同。支持Ctrl+拖放复制。</div>
-</div>
+<div class="kp-card" id="kp1-2"><div class="kp-title">1.2 硬件选型要点 <span class="badge badge-tool">选型</span></div><div class="kp-content">
+<h4>CPU选型对比</h4>
+<table><tr><th>型号</th><th>用户内存</th><th>支持I/O</th><th>以太网口</th><th>适用场景</th></tr>
+<tr><td>CPE305</td><td>256KB</td><td>2048点</td><td>1口</td><td>小型设备控制</td></tr>
+<tr><td>CPE310</td><td>512KB</td><td>4096点</td><td>1口</td><td>中型产线</td></tr>
+<tr><td><strong>CPE330</strong></td><td><strong>2MB</strong></td><td><strong>8192点</strong></td><td><strong>2口</strong></td><td><strong>大型产线/过程控制</strong></td></tr>
+<tr><td>CPE400</td><td>4MB</td><td>16384点</td><td>2口</td><td>超大型/冗余系统</td></tr></table>
+<div class="tip-box"><span class="tip-label">选型经验</span>一般工厂产线项目选<strong>CPE330</strong>性价比最高：2MB内存足够中等规模程序+UDFB库，双以太网口可分别接SCADA和远程I/O，支持Profinet。</div>
+<h4>电源模块选型</h4>
+<p>电源模块为背板供电，需根据I/O模块总功耗选择。常见配置：</p>
+<ul><li><strong>IC695PSD040</strong>：40W直流电源，适合小型机架（5-6个模块）</li><li><strong>IC695PSD140</strong>：140W直流电源，适合大型机架或模拟量多的场合</li><li>电源模块必须安装在<strong>机架第1槽</strong>，CPU通常在第2槽</li></ul>
+<div class="warn-box"><span class="warn-label">注意</span>电源功率不足会导致I/O模块随机掉线或通信中断。计算总功耗时需加上CPU本身的背板功耗（约5-8W），并留30%余量。</div>
+</div></div>
 
-<div class="card">
-<h3><span class="tag tag-sw">PME</span>四种程序块类型</h3>
-<table>
-<tr><th>类型</th><th>编程语言</th><th>最大大小</th><th>参数</th><th>说明</th></tr>
-<tr><td>程序块</td><td>LD/ST/FBD</td><td>128KB</td><td>0入/1出(OK)</td><td>_MAIN自动执行，其它需被调用</td></tr>
-<tr><td>参数块</td><td>LD/ST/FBD</td><td>128KB</td><td>63入/64出</td><td>带参数的子程序，类似函数调用</td></tr>
-<tr><td>UDFB</td><td>LD/ST/FBD</td><td>128KB</td><td>63入/64出</td><td>用户自定义功能块，带实例数据</td></tr>
-<tr><td>外部块</td><td>C语言</td><td>用户内存定</td><td>63入/64出</td><td>用C语言编写的高级功能块</td></tr>
-</table>
-<div class="note">所有块自动提供OK输出参数(Y0)，块被调用时Y0初始化为TRUE，执行完后输出正电流，除非块内逻辑将Y0置为FALSE。程序最多包含512个块。</div>
-</div>
+<div class="kp-card" id="kp1-3"><div class="kp-title">1.3 PME工程结构总览 <span class="badge badge-concept">工程</span></div><div class="kp-content">
+<p>在PME中创建项目时，整个工程的结构如下：</p>
+<div class="formula-block"><div class="formula-label">PME工程结构</div><div class="formula">Project（工程，最多32个Target）
+  Target 1: PAC控制器（如CPE330）
+    Hardware Configuration（硬件组态 HWC）
+      CPU模块（CPE330, 槽2）
+      电源模块（PSD140, 槽1）
+      I/O模块（IC695系列, 槽3-N）
+      通信模块（如ETC001 PNIO控制器）
+    Logic（程序逻辑）
+      Main Block（主程序块）
+      Program Block（子程序块）
+      UDFB（用户自定义功能块）
+      Variable List（变量表）
+    Target 2: HMI（如QuickPanel+）
+      画面配置
+      变量映射</div></div>
+<p>实际项目中，<strong>一个Project可以包含多个Target</strong>。例如一台PME工程里同时包含PLC的Target和触摸屏的Target，方便统一管理。</p>
+<div class="tip-box"><span class="tip-label">项目规范建议</span>建议每个产线或设备段建立独立Project，不要把多条产线塞进同一个工程。Project过大（超过5MB）会导致编译和下载变慢。</div>
+</div></div>
 
-<div class="card">
-<h3>程序执行流程</h3>
-<div class="formula">上电 → 读取硬件配置 → 初始化I/O
-↓
-┌─→ 输入采样阶段: 读取所有%I和%AI到映象区
-│   ↓
-│   用户程序执行: _MAIN → 调用各子程序块
-│   ↓
-│   输出刷新阶段: 将%Q和%AQ写到输出模块
-│   ↓
-│   通信处理: SRTP/EGD/Modbus窗口
-│   ↓
-└─── 循环 (扫描周期)
+<div class="kp-card" id="kp1-4"><div class="kp-title">1.4 网络拓扑设计 <span class="badge badge-method">网络</span></div><div class="kp-content">
+<p>典型RX3i项目网络拓扑：</p>
+<table><tr><th>网络</th><th>协议</th><th>连接对象</th><th>速率</th></tr>
+<tr><td>控制网</td><td>SRTP / EGD</td><td>CPU ↔ Cimplicity Server</td><td>100Mbps</td></tr>
+<tr><td>现场网</td><td>Profinet</td><td>CPU ↔ 远程I/O站</td><td>100Mbps</td></tr>
+<tr><td>串行网</td><td>Modbus RTU</td><td>CPU ↔ 变频器/仪表</td><td>9.6-115.2kbps</td></tr>
+<tr><td>管理网</td><td>OPC UA</td><td>Cimplicity ↔ MES/ERP</td><td>1Gbps</td></tr></table>
+<div class="example-box"><span class="ex-label">双网卡分离方案</span>
+<p>CPE330有2个以太网口，推荐配置：</p>
+<ul><li><strong>ETH1（192.168.1.x）</strong>：接控制网交换机，连接Cimplicity Server和触摸屏</li><li><strong>ETH2（192.168.2.x）</strong>：接Profinet远程I/O网络</li><li>两个网络物理隔离，避免广播风暴互相影响</li></ul></div>
+<div class="warn-box"><span class="warn-label">常见问题</span>不要将Cimplicity上位机、办公电脑和远程I/O混接在同一个交换机上。Profinet的实时报文会被普通数据流量干扰，导致I/O通信超时。</div>
+</div></div>
 
-扫描模式:
-- Normal: 正常扫描，尽可能快
-- Constant Window: 固定窗口时间，剩余时间给通信
-- Constant Sweep: 固定扫描周期，超时报警(Watchdog)</div>
-<div class="note">建议：对控制精度要求高的场合用Constant Sweep模式，设定固定扫描周期(如10ms/20ms)。</div>
 </div>
 
-<div class="card">
-<h3>项目编程规范建议</h3>
-<ul>
-<li><strong>地址规划</strong>：做Excel文件规划各模块的%I/%Q/%AI/%AQ地址，以及状态/诊断地址</li>
-<li><strong>模块化编程</strong>：_MAIN只做调用，逻辑写在子程序块中</li>
-<li><strong>UDFB复用</strong>：电机控制、阀门控制等重复逻辑封装成UDFB</li>
-<li><strong>变量命名</strong>：用有意义的符号变量名，如Motor1_Start、Tank_Level_PV</li>
-<li><strong>状态诊断</strong>：每个I/O模块分配状态地址(建议放高地址区如%R9000+)</li>
-<li><strong>注释</strong>：每个块和关键梯级加Comment注释</li>
-<li><strong>备份</strong>：每次修改后用Back Up功能打包zip</li>
-</ul>
-</div>
-</div>
+<!-- ========== 第二章 程序框架与执行流程 ========== -->
+<div class="chapter" id="ch2">
+<div class="chapter-header"><span class="ch-tag">第二章</span><h2>程序框架与执行流程</h2><div class="ch-desc">程序块类型与调用关系、扫描周期执行顺序、程序架构设计规范</div></div>
 
-<!-- ============ 2. 变量与内存 ============ -->
-<div class="section" id="s2">
-<div class="section-title"><span class="section-icon">💾</span>二、变量与内存系统</div>
+<div class="kp-card" id="kp2-1"><div class="kp-title">2.1 四种程序块类型与用途 <span class="badge badge-concept">框架</span></div><div class="kp-content">
+<p>RX3i程序由四种块组成，各有不同用途：</p>
+<table><tr><th>块类型</th><th>功能</th><th>执行方式</th><th>项目中的角色</th></tr>
+<tr><td><strong>Main</strong></td><td>主程序入口</td><td>每次扫描执行</td><td>调用各子程序块，不写具体逻辑</td></tr>
+<tr><td><strong>Program Block</strong></td><td>子程序</td><td>被Main调用时执行</td><td>按功能划分：原料、加工、包装等</td></tr>
+<tr><td><strong>UDFB</strong></td><td>用户功能块</td><td>被调用时执行</td><td>封装标准设备控制逻辑（电机、阀门等）</td></tr>
+<tr><td><strong>Interrupt Block</strong></td><td>中断程序</td><td>事件触发时执行</td><td>高速计数、紧急停机、定时采样</td></tr></table>
+<div class="formula-block"><div class="formula-label">典型Main块结构</div><div class="formula">// Main块 - 只做调用，不写逻辑
+CALL PB_SYSTEM_INIT      // 系统初始化（上电一次性执行）
+CALL PB_MOTOR_CONTROL    // 电机控制
+CALL PB_VALVE_CONTROL    // 阀门控制
+CALL PB_PID_CONTROL      // PID回路
+CALL PB_ALARM_PROCESS    // 报警处理
+CALL PB_COMM_PROCESS     // 通信处理
+CALL PB_HMI_INTERFACE    // 上位机接口</div></div>
+<div class="tip-box"><span class="tip-label">编程规范</span>Main块中<strong>只写CALL指令</strong>，不写具体控制逻辑。每个功能模块独立为Program Block，方便调试、修改和复用。</div>
+</div></div>
 
-<div class="card">
-<h3>内存区域分配（参考地址）</h3>
-<table>
-<tr><th>前缀</th><th>类型</th><th>单位</th><th>断电保持</th><th>说明</th></tr>
-<tr><td>%I</td><td>离散输入</td><td>bit</td><td>是</td><td>来自输入模块的状态，只读</td></tr>
-<tr><td>%Q</td><td>离散输出</td><td>bit</td><td>否</td><td>控制输出模块</td></tr>
-<tr><td>%M</td><td>内部线圈</td><td>bit</td><td>可设</td><td>中间变量</td></tr>
-<tr><td>%T</td><td>定时器</td><td>word</td><td>—</td><td>定时器当前值和状态</td></tr>
-<tr><td>%AI</td><td>模拟输入</td><td>word(16bit)</td><td>是</td><td>来自模拟量输入模块</td></tr>
-<tr><td>%AQ</td><td>模拟输出</td><td>word(16bit)</td><td>否</td><td>控制模拟量输出模块</td></tr>
-<tr><td>%R</td><td>寄存器</td><td>word(16bit)</td><td>可设</td><td>数据存储，最常用</td></tr>
-<tr><td>%SA</td><td>系统状态A</td><td>bit</td><td>是</td><td>断电保持的系统状态</td></tr>
-<tr><td>%SB</td><td>系统状态B</td><td>bit</td><td>否</td><td>时钟驱动系统状态</td></tr>
-<tr><td>%SC</td><td>系统状态C</td><td>bit</td><td>否</td><td>故障驱动系统状态</td></tr>
-<tr><td>%S</td><td>系统状态</td><td>bit</td><td>—</td><td>只读系统状态</td></tr>
-<tr><td>%G</td><td>全局数据</td><td>word</td><td>—</td><td>EGD交换数据区</td></tr>
-<tr><td>%W</td><td>字存储器</td><td>dword(32bit)</td><td>可设</td><td>符号变量存储区</td></tr>
-<tr><td>%P</td><td>程序寄存器</td><td>word</td><td>—</td><td>局部程序数据</td></tr>
-<tr><td>%L</td><td>局部寄存器</td><td>word</td><td>—</td><td>局部块数据</td></tr>
-</table>
-</div>
+<div class="kp-card" id="kp2-2"><div class="kp-title">2.2 扫描周期与执行流程 <span class="badge badge-method">执行</span></div><div class="kp-content">
+<p>PLC每个扫描周期的执行顺序：</p>
+<div class="formula-block"><div class="formula-label">扫描周期执行流程</div><div class="formula">1. 读取输入（%I/%AI 刷新）
+2. 执行通信服务（SRTP/EGD报文处理）
+3. 执行Main块 → 按顺序调用各Program Block
+4. 执行后台任务（如PID运算）
+5. 检查中断条件 → 触发则执行中断块
+6. 写入输出（%Q/%AQ 刷新）
+7. 诊断检查
+→ 回到步骤1，循环执行</div></div>
+<p><strong>典型扫描周期</strong>：空载约1-3ms，中等程序约5-15ms，大型程序不超过30ms。</p>
+<div class="warn-box"><span class="warn-label">性能注意</span>如果扫描周期超过<strong>50ms</strong>，需要检查：是否有大量浮点运算、是否有死循环、UDFB是否被过度调用。可以用PME在线监控CPU负载（%T指标）。</div>
+<h4>Scan Sets（扫描集）配置</h4>
+<p>当程序量很大时，可以将不同Program Block分配到不同扫描集，分时执行：</p>
+<table><tr><th>Scan Set</th><th>分配的块</th><th>执行频率</th></tr>
+<tr><td>#1（默认）</td><td>Main + 关键控制块</td><td>每次扫描</td></tr>
+<tr><td>#2</td><td>通信处理块</td><td>每2次扫描</td></tr>
+<tr><td>#3</td><td>数据记录块</td><td>每5次扫描</td></tr></table>
+</div></div>
 
-<div class="card">
-<h3>符号变量 vs 映射变量</h3>
-<p><strong>映射变量</strong>：直接使用物理地址，如 <code>%R0001</code>、<code>%I00001</code></p>
-<p><strong>符号变量</strong>：给地址取名，如 <code>Motor_Start</code> 映射到 <code>%I00001</code></p>
-<div class="formula">// 在Navigator的Var.标签页声明变量
-// Name        Type    Address     Retentive  Description
-// Motor_Start  BOOL   %I00001     No         电机启动按钮
-// Motor_Run    BOOL   %Q00001     No         电机运行输出
-// Tank_Level   INT    %AI0001     No         水箱液位
-// Set_Pressure REAL   %R00001     Yes        设定压力值</div>
-<div class="note">推荐使用符号变量编程，可读性好，修改硬件时不用改程序。Enable Shared Variables属性可让多个Target共享变量。</div>
-</div>
+<div class="kp-card" id="kp2-3"><div class="kp-title">2.3 项目程序架构设计规范 <span class="badge badge-practice">实战</span></div><div class="kp-content">
+<p>基于实际工程经验，推荐的程序架构设计方法：</p>
+<h4>分层架构设计</h4>
+<table><tr><th>层级</th><th>块名称</th><th>职责</th></tr>
+<tr><td>第1层 调度层</td><td>Main</td><td>调用各功能块，管理系统状态机</td></tr>
+<tr><td>第2层 功能层</td><td>PB_XXX</td><td>按工艺段划分，调用UDFB实例</td></tr>
+<tr><td>第3层 设备层</td><td>UDFB</td><td>封装单个设备控制逻辑（电机/阀门/PID）</td></tr>
+<tr><td>第4层 基础层</td><td>系统变量</td><td>%S、%SA等系统状态、公共数据区</td></tr></table>
+<h4>命名规范</h4>
+<table><tr><th>对象</th><th>命名规则</th><th>示例</th></tr>
+<tr><td>Program Block</td><td>PB_功能段名</td><td>PB_MIXING（搅拌段）</td></tr>
+<tr><td>UDFB</td><td>UF_设备类型</td><td>UF_MOTOR（电机控制块）</td></tr>
+<tr><td>变量</td><td>类型_功能_属性</td><td>DI_START_CMD（数字输入-启动命令）</td></tr>
+<tr><td>实数变量</td><td>RV_功能名</td><td>RV_TEMP_PV（温度实际值）</td></tr>
+<tr><td>整数变量</td><td>IV_功能名</td><td>IV_STEP_NO（步序号）</td></tr></table>
+<div class="example-box"><span class="ex-label">项目实例</span>
+<p>一条饮料灌装线，程序结构如下：</p>
+<ul><li><strong>Main</strong>：调用6个子程序块</li><li><strong>PB_SYSTEM</strong>：系统初始化、运行模式管理、急停处理</li><li><strong>PB_BOTTLE_FEED</strong>：进瓶段 - 调用3个UF_CONVEYOR实例</li><li><strong>PB_FILLING</strong>：灌装段 - 调用8个UF_FILLER实例 + 1个UF_PID实例</li><li><strong>PB_CAPPING</strong>：旋盖段 - 调用2个UF_MOTOR实例</li><li><strong>PB_LABELING</strong>：贴标段 - 调用1个UF_CONVEYOR实例</li><li><strong>PB_ALARM</strong>：报警管理、故障记录</li></ul></div>
+</div></div>
 
-<div class="card">
-<h3>数据类型</h3>
-<table>
-<tr><th>类型</th><th>位数</th><th>范围/说明</th></tr>
-<tr><td>BOOL</td><td>1</td><td>0 或 1</td></tr>
-<tr><td>BYTE</td><td>8</td><td>0~255</td></tr>
-<tr><td>INT/WORD</td><td>16</td><td>-32768~32767 / 0~65535</td></tr>
-<tr><td>UINT</td><td>16</td><td>0~65535</td></tr>
-<tr><td>DINT/DWORD</td><td>32</td><td>-2^31~2^31-1</td></tr>
-<tr><td>REAL</td><td>32</td><td>IEEE 754 浮点</td></tr>
-<tr><td>LREAL</td><td>64</td><td>双精度浮点</td></tr>
-<tr><td>STRING</td><td>可变</td><td>ASCII字符串</td></tr>
-<tr><td>UDT</td><td>自定义</td><td>用户定义数据类型</td></tr>
-</table>
-</div>
+<div class="kp-card" id="kp2-4"><div class="kp-title">2.4 系统状态机设计 <span class="badge badge-method">状态机</span></div><div class="kp-content">
+<p>项目中最核心的设计是<strong>系统运行状态机</strong>，控制整条产线的运行模式：</p>
+<table><tr><th>状态码</th><th>状态名</th><th>条件</th><th>动作</th></tr>
+<tr><td>0</td><td>INIT（初始化）</td><td>上电/复位</td><td>变量清零、设备回原点</td></tr>
+<tr><td>10</td><td>IDLE（待机）</td><td>初始化完成</td><td>等待启动命令</td></tr>
+<tr><td>20</td><td>RUNNING（运行）</td><td>启动命令+无故障</td><td>各段正常运行</td></tr>
+<tr><td>30</td><td>HOLDING（保持）</td><td>暂停命令</td><td>输出保持当前位置</td></tr>
+<tr><td>90</td><td>FAULT（故障）</td><td>任意故障触发</td><td>按故障等级处理</td></tr>
+<tr><td>99</td><td>ESTOP（急停）</td><td>急停按钮</td><td>所有输出切断</td></tr></table>
+<div class="formula-block"><div class="formula-label">ST状态机实现</div><div class="formula">// 系统状态机（ST编程）
+CASE IV_SYS_STATE OF
+  0:  // INIT
+    CALL_INIT_SEQUENCE();
+    IF INIT_DONE THEN
+      IV_SYS_STATE := 10;
+    END_IF;
 
-<div class="card">
-<h3>间接寻址</h3>
-<p>PACSystems CPU和90-70系列支持间接寻址，可用于所有寄存器类型(%R, %P, %L, %W, %AI, %AQ)：</p>
-<div class="formula">// 用@符号进行间接寻址
-// %R0001 := @%R0100;  // 读取%R0100中存储的地址所指向的值
-//
-// 实际应用：遍历数组
-// FOR index := 1 TO 100 DO
-//   @Register_Pointer := count;
-//   Register_Pointer := Register_Pointer + 1;
-// END_FOR;</div>
-</div>
+  10: // IDLE
+    IF DI_START_CMD AND NOT ANY_FAULT THEN
+      IV_SYS_STATE := 20;
+    END_IF;
 
-<div class="card">
-<h3>内存配置（CPU Memory卡）</h3>
-<p>在CPU的Memory参数卡中可配置各区域大小：</p>
-<ul>
-<li><strong>Reference Points</strong>：各类位地址空间(%I/%Q/%M/%T等)，只读</li>
-<li><strong>Reference Words</strong>：各类字地址空间(%AI/%AQ/%R等)，可配置</li>
-<li><strong>Managed Memory</strong>：符号变量地址空间(%W)，可配置</li>
-<li><strong>Total User Memory Required</strong>：用户数据内存需求总计</li>
-</ul>
-<div class="warn">默认内存值可能太小，使用EGD或大量符号变量时需要手动调大。下载硬件配置后生效。</div>
-</div>
-</div>
+  20: // RUNNING
+    IF DI_PAUSE_CMD THEN
+      IV_SYS_STATE := 30;
+    ELSIF ANY_FAULT THEN
+      IV_SYS_STATE := 90;
+    END_IF;
 
-<!-- ============ 3. 块与UDFB ============ -->
-<div class="section" id="s3">
-<div class="section-title"><span class="section-icon">🧩</span>三、程序块与UDFB（面向对象编程）</div>
+  30: // HOLDING
+    IF DI_START_CMD THEN
+      IV_SYS_STATE := 20;
+    ELSIF ANY_FAULT THEN
+      IV_SYS_STATE := 90;
+    END_IF;
 
-<div class="card">
-<h3><span class="tag tag-fb">UDFB</span>用户自定义功能块（类似Class）</h3>
-<p>UDFB是PACSystems的面向对象编程核心。定义好UDFB后可创建多个实例，每个实例有独立的内部数据拷贝。</p>
-<div class="formula">// UDFB结构
-UDFB: Motor_Control
-├─ 输入参数 (只读):
-│   ├─ Start      (BOOL)   - 启动命令
-│   ├─ Stop       (BOOL)   - 停止命令
-│   ├─ EStop      (BOOL)   - 紧急停止
-│   ├─ Motor_Ready(BOOL)   - 电机备妥信号
-│   └─ Motor_FB   (BOOL)   - 运行反馈
-├─ 输出参数 (只读):
-│   ├─ Motor_Run  (BOOL)   - 运行输出
-│   ├─ Alarm      (BOOL)   - 报警输出
-│   └─ OK         (BOOL)   - 块状态(Y0,自动)
-├─ 成员变量 (实例数据):
-│   ├─ Run_Timer  (DINT)   - 运行计时器
-│   ├─ Start_Count(INT)    - 启动次数
-│   └─ Fault_Code (WORD)   - 故障代码
-└─ 逻辑 (LD/ST/FBD)
+  90: // FAULT
+    IF DI_RESET_CMD AND NOT ANY_FAULT THEN
+      IV_SYS_STATE := 10;
+    END_IF;
 
-// 调用时指定实例名:
-// CALL Motor_Control (实例: Conveyor_1)
-// CALL Motor_Control (实例: Conveyor_2)
-// 每个实例独立运行，数据互不影响</div>
+  99: // ESTOP
+    IF NOT DI_ESTOP AND DI_RESET_CMD THEN
+      IV_SYS_STATE := 90;
+    END_IF;
+END_CASE;</div></div>
+<div class="tip-box"><span class="tip-label">设计要点</span>状态机放在Main块的最前面执行，确保每次扫描都先判断当前状态，再决定是否执行各功能块的逻辑。各Program Block内部也根据IV_SYS_STATE来决定是否执行。</div>
+</div></div>
+
 </div>
 
-<div class="card">
-<h3>UDFB三种参数传递机制</h3>
-<table>
-<tr><th>机制</th><th>方向</th><th>说明</th><th>使用场景</th></tr>
-<tr><td>参考变量传递</td><td>双向</td><td>传递地址，直接操作原变量</td><td>默认机制，最常用</td></tr>
-<tr><td>值传递</td><td>入→内</td><td>拷贝值到UDFB，不影响原变量</td><td>需要保护原数据时</td></tr>
-<tr><td>结果传递</td><td>内→出</td><td>拷贝值进入，退出时拷贝结果回原变量</td><td>输出参数</td></tr>
-</table>
-<div class="note">BOOL输入默认参考变量传递，输出默认结果传递(Y0除外)。形参不能用于变位线圈/触点、DO I/O功能块、间接寻址。</div>
-</div>
+<!-- ========== 第三章 变量系统与内存规划 ========== -->
+<div class="chapter" id="ch3">
+<div class="chapter-header"><span class="ch-tag">第三章</span><h2>变量系统与内存规划</h2><div class="ch-desc">内存区域分配、变量类型与命名、间接寻址、项目内存规划实战</div></div>
 
-<div class="card">
-<h3><span class="tag tag-fb">UDFB</span>实际项目示例：带启动预警的电机控制</h3>
-<div class="example">
-<h4>需求</h4>
-<ul>
-<li>启动命令发出后等待10秒再启动电机</li>
-<li>10秒等待中产生灯光闪烁(1秒脉冲)和电铃报警</li>
-<li>可用于多台电机，每台独立控制</li>
-</ul>
-<h4>UDFB定义: UDFB_LDBK</h4>
-<div class="formula">输入参数:
-  Start_PB  (BOOL) - 启动按钮
-  Stop_PB   (BOOL) - 停止按钮
-  Ready     (BOOL) - 备妥信号
-输出参数:
-  Motor_Out (BOOL) - 电机输出
-  Horn      (BOOL) - 电铃输出
-  Light     (BOOL) - 灯光输出
-成员变量:
-  Timer_Val (DINT) - 延时计时
+<div class="kp-card" id="kp3-1"><div class="kp-title">3.1 内存区域全览与项目分配 <span class="badge badge-concept">内存</span></div><div class="kp-content">
+<p>RX3i的内存区域设计是项目规划的基础，每个区域有不同用途：</p>
+<table><tr><th>区域</th><th>前缀</th><th>数据类型</th><th>保持性</th><th>项目用途</th></tr>
+<tr><td><strong>%I</strong></td><td>离散输入</td><td>BOOL</td><td>非保持</td><td>来自I/O模块的DI信号</td></tr>
+<tr><td><strong>%Q</strong></td><td>离散输出</td><td>BOOL</td><td>非保持</td><td>输出到I/O模块的DO信号</td></tr>
+<tr><td><strong>%M</strong></td><td>内部线圈</td><td>BOOL</td><td>非保持</td><td>中间运算结果、标志位</td></tr>
+<tr><td><strong>%AI</strong></td><td>模拟输入</td><td>INT(16位)</td><td>非保持</td><td>来自I/O模块的AI信号</td></tr>
+<tr><td><strong>%AQ</strong></td><td>模拟输出</td><td>INT(16位)</td><td>非保持</td><td>输出到I/O模块的AO信号</td></tr>
+<tr><td><strong>%R</strong></td><td>寄存器</td><td>INT/WORD</td><td>保持</td><td>PID参数、计数器、保持数据</td></tr>
+<tr><td><strong>%W</strong></td><td>扩展寄存器</td><td>DINT/REAL</td><td>保持</td><td>浮点数据、批量数据存储</td></tr>
+<tr><td><strong>%G</strong></td><td>全局数据</td><td>各种</td><td>保持</td><td>多CPU共享数据</td></tr>
+<tr><td><strong>%S</strong></td><td>系统状态</td><td>BOOL</td><td>系统</td><td>系统时钟、故障状态</td></tr>
+<tr><td><strong>%SA</strong></td><td>系统保持A</td><td>BOOL</td><td>保持</td><td>首次扫描脉冲、故障锁存</td></tr>
+<tr><td><strong>%P</strong></td><td>程序局部</td><td>各种</td><td>-</td><td>UDFB/PB内部局部变量</td></tr></table>
+<div class="tip-box"><span class="tip-label">项目内存规划原则</span>
+<ul><li><strong>%I/%Q/%AI/%AQ</strong>：只用于I/O模块映射，不要在程序中直接操作</li><li><strong>%M</strong>：用于不需要断电保持的中间标志</li><li><strong>%R</strong>：用于需要断电保持的整数数据（PID参数、配方等）</li><li><strong>%W</strong>：用于浮点数据和大量数据存储</li><li>建议使用<strong>符号变量</strong>而非直接地址，提高可读性</li></ul></div>
+</div></div>
 
-逻辑(LD):
-  Start_PB AND NOT Stop_PB AND Ready → 启动内部继电器
-  启动继电器 AND NOT Motor_Out → 启动延时定时器(10s)
-  定时器运行中:
-    Light := %S0005 (1秒脉冲闪烁)
-    Horn  := TRUE (持续电铃)
-  定时器到达 → Motor_Out := TRUE
-  Motor_Out AND Stop_PB → 复位
+<div class="kp-card" id="kp3-2"><div class="kp-title">3.2 符号变量与数据类型 <span class="badge badge-method">变量</span></div><div class="kp-content">
+<p>实际项目中应<strong>全部使用符号变量</strong>，不要直接引用地址。PME支持在Variable List中定义符号变量并绑定到内存地址：</p>
+<div class="formula-block"><div class="formula-label">符号变量定义示例</div><div class="formula">// 在Variable List中定义
+DI_START_BTN     AT %I00001 : BOOL;   // 启动按钮（接DI第1点）
+DI_STOP_BTN      AT %I00002 : BOOL;   // 停止按钮（接DI第2点）
+DO_MOTOR_RUN     AT %Q00001 : BOOL;   // 电机运行输出
+AI_TEMP_PV       AT %AI0001 : INT;    // 温度实际值（原始值0-32000）
+AQ_VALVE_POS     AT %AQ0001 : INT;    // 阀门开度输出（0-32000）
+RV_TEMP_PV       AT %R00001 : REAL;   // 温度工程量（℃）
+IV_STEP_NO       AT %R00010 : INT;    // 步序号
+RV_PID_SP        AT %R00020 : REAL;   // PID设定值
 
-调用(_MAIN中):
-  CALL UDFB_LDBK (实例: Conveyor_1)
-    Start_PB := C1_Start_PB
-    Stop_PB  := C1_Stop_PB
-    Ready    := C1_Ready
-    Motor_Out → C1_Motor
-    Horn      → C1_Horn
-    Light     → C1_Light
+// 不绑定地址的内部变量
+RUN_MODE         : BOOL;              // 运行模式标志
+FAULT_CODE       : INT;               // 故障代码</div></div>
+<h4>数据类型说明</h4>
+<table><tr><th>类型</th><th>位数</th><th>范围</th><th>用途</th></tr>
+<tr><td>BOOL</td><td>1位</td><td>0或1</td><td>开关量</td></tr>
+<tr><td>INT</td><td>16位</td><td>-32768~32767</td><td>%AI/%AQ原始值、计数</td></tr>
+<tr><td>DINT</td><td>32位</td><td>-2^31~2^31-1</td><td>大数值计数</td></tr>
+<tr><td>REAL</td><td>32位</td><td>浮点数</td><td>工程量、PID运算</td></tr>
+<tr><td>WORD</td><td>16位</td><td>0~65535</td><td>位操作、状态字</td></tr>
+<tr><td>DWORD</td><td>32位</td><td>0~4294967295</td><td>通信数据</td></tr></table>
+</div></div>
 
-  CALL UDFB_LDBK (实例: Conveyor_2)
-    Start_PB := C2_Start_PB
-    ...</div>
-</div>
-</div>
+<div class="kp-card" id="kp3-3"><div class="kp-title">3.3 模拟量工程量转换 <span class="badge badge-formula">转换</span></div><div class="kp-content">
+<p>项目中模拟量处理是最常见的任务。<code>%AI</code>读到的是原始值（0-32000），需要转换为工程量：</p>
+<div class="formula-block"><div class="formula-label">工程量转换公式（ST）</div><div class="formula">// 4-20mA对应0-32000原始值，工程量0-100℃
+// 原始值 6400 = 4mA = 0℃
+// 原始值 32000 = 20mA = 100℃
+RV_TEMP_PV := (INT_TO_REAL(AI_TEMP_PV) - 6400.0) 
+             * 100.0 / (32000.0 - 6400.0);
 
-<div class="card">
-<h3>参数块示例：电机启停控制</h3>
-<div class="formula">// 参数块 PB_LDBK
-// 输入: Start, Stop, EStop, MR(备妥), R_M(运行反馈)
-// 输出: Motor_Run
+// 通用转换函数（做成UDFB）
+// 输入：Raw(原始值), Raw_Min, Raw_Max, Eng_Min, Eng_Max
+// 输出：Eng(工程量)
+Eng := (INT_TO_REAL(Raw) - REAL_MIN) 
+       * (Eng_Max - Eng_Min) / (Raw_Max - Raw_Min) 
+       + Eng_Min;</div></div>
+<div class="warn-box"><span class="warn-label">注意</span>4-20mA信号的原始值不是0开始，而是6400（4mA对应32000的20%）。0-20mA信号才是0-32000。务必确认传感器输出类型！</div>
+<div class="example-box"><span class="ex-label">实际项目处理</span>
+<p>建议将模拟量转换封装为UDFB <code>UF_ANALOG_SCALE</code>，每个AI点调用一次。同时加入<strong>断线检测</strong>：当原始值<3200（<2mA）时判定为传感器断线，输出故障标志。</p></div>
+</div></div>
 
-// LD逻辑:
-// Start AND NOT Stop AND NOT EStop AND MR → 内部启动继电器
-// (启动继电器 OR R_M) AND NOT Stop AND MR → Motor_Run
-// Motor_Run 保持依赖 R_M 反馈
-
-// _MAIN中调用:
-// CALL PB_LDBK(Start=M1_Start, Stop=M1_Stop, EStop=M1_ES,
-//              MR=M1_Ready, R_M=M1_Return, Motor_Run=M1_Output)</div>
-</div>
-
-<div class="card">
-<h3>程序块调用关系</h3>
-<div class="formula">_MAIN (自动执行)
-├─ CALL PB_LDBK (参数块: 电机控制)
-├─ CALL UDFB_LDBK (实例: Conv_1)  ← UDFB调用
-├─ CALL UDFB_LDBK (实例: Conv_2)  ← 同一UDFB不同实例
-├─ CALL Valve_Ctrl (参数块: 阀门控制)
-├─ CALL Comm_Handler (程序块: 通信处理)
-├─ CALL Alarm_Handler (程序块: 报警处理)
-└─ CALL PID_Loop (参数块: PID控制)
-
-注意:
-- 不要从_MAIN或非中断块中调用中断驱动块
-- 嵌套调用层数受堆栈限制
-- 子程序可以调用其它子程序(包括自己=递归)</div>
-</div>
-</div>
-
-<!-- ============ 4. LD指令 ============ -->
-<div class="section" id="s4">
-<div class="section-title"><span class="section-icon">📐</span>四、梯形图指令集</div>
-
-<div class="card">
-<h3>触点指令</h3>
-<table>
-<tr><th>指令</th><th>符号</th><th>说明</th></tr>
-<tr><td>常开触点</td><td>--[ ]--</td><td>地址为1时导通</td></tr>
-<tr><td>常闭触点</td><td>--[/]--</td><td>地址为0时导通</td></tr>
-<tr><td>正向跳变触点</td><td>--[P]--</td><td>OFF→ON时导通一个扫描周期</td></tr>
-<tr><td>负向跳变触点</td><td>--[N]--</td><td>ON→OFF时导通一个扫描周期</td></tr>
-<tr><td>故障触点</td><td>--[FLT]--</td><td>对应地址有故障时导通</td></tr>
-<tr><td>无故障触点</td><td>--[NOFLT]--</td><td>对应地址无故障时导通</td></tr>
-<tr><td>高报警触点</td><td>--[HIALM]--</td><td>模拟量高报警时导通</td></tr>
-<tr><td>低报警触点</td><td>--[LOALM]--</td><td>模拟量低报警时导通</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>线圈指令</h3>
-<table>
-<tr><th>指令</th><th>符号</th><th>说明</th></tr>
-<tr><td>输出线圈</td><td>--( )--</td><td>写入结果到地址</td></tr>
-<tr><td>求反线圈</td><td>--(/)--</td><td>写入反值</td></tr>
-<tr><td>保持线圈</td><td>--(M)--</td><td>断电保持的输出</td></tr>
-<tr><td>反保持线圈</td><td>--(/M)--</td><td>断电保持的反值</td></tr>
-<tr><td>置位线圈</td><td>--(S)--</td><td>置1并保持</td></tr>
-<tr><td>复位线圈</td><td>--(R)--</td><td>置0并保持</td></tr>
-<tr><td>保持置位</td><td>--(SM)--</td><td>断电保持的置位</td></tr>
-<tr><td>保持复位</td><td>--(RM)--</td><td>断电保持的复位</td></tr>
-<tr><td>正向跳变线圈</td><td>--(P)--</td><td>OFF→ON脉冲</td></tr>
-<tr><td>负向跳变线圈</td><td>--(N)--</td><td>ON→OFF脉冲</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>定时器指令</h3>
-<table>
-<tr><th>指令</th><th>说明</th><th>参数</th></tr>
-<tr><td>ONDTR</td><td>延时接通定时器</td><td>IN(使能), PV(预设值), CV(当前值), Q(到时输出)</td></tr>
-<tr><td>TMR</td><td>定时器(同ONDTR简化版)</td><td>IN, PV, CV</td></tr>
-<tr><td>OFDT</td><td>延时断开定时器</td><td>IN断开后继续计时</td></tr>
-</table>
-<div class="formula">// ONDTR示例: 电机启动延时5秒
-//   IN  = Start_Relay (启动继电器)
-//   PV  = 50 (预设值, 100ms基准 × 50 = 5秒)
-//   CV  = %R0001 (当前值存储)
-//   Q   = Timer_Done (到时输出)
-//
-// 定时器基准: 1ms / 10ms / 100ms / 1s (在硬件配置中设定)
-// %S0005 = 1秒脉冲 (也可用于简单计时)</div>
-</div>
-
-<div class="card">
-<h3>计数器指令</h3>
-<table>
-<tr><th>指令</th><th>说明</th><th>参数</th></tr>
-<tr><td>UPCTR</td><td>递增计数器</td><td>IN(计数输入), R(复位), PV(预设值), CV(当前值)</td></tr>
-<tr><td>DNCTR</td><td>递减计数器</td><td>IN(计数输入), R(复位), PV(预设值), CV(当前值)</td></tr>
-</table>
-<div class="formula">// UPCTR示例: 产品计数到100时报警
-//   IN  = Product_Detect (产品检测信号)
-//   R   = Reset_Count (复位按钮)
-//   PV  = 100
-//   CV  = %R0010 (当前计数值)
-//   Q   = Count_Alarm (到数报警)</div>
-</div>
-
-<div class="card">
-<h3>数学运算指令</h3>
-<table>
-<tr><th>分类</th><th>指令</th><th>说明</th></tr>
-<tr><td>基本运算</td><td>ADD/SUB/MUL/DIV</td><td>加/减/乘/除 (支持INT/DINT/REAL)</td></tr>
-<tr><td>取模</td><td>MOD</td><td>取余数 (INT/DINT)</td></tr>
-<tr><td>开方</td><td>SQRT</td><td>平方根 (INT/DINT/REAL)</td></tr>
-<tr><td>三角函数</td><td>SIN/COS/TAN</td><td>正弦/余弦/正切 (REAL)</td></tr>
-<tr><td>反三角</td><td>ASIN/ACOS/ATAN</td><td>反正弦等 (REAL)</td></tr>
-<tr><td>指数对数</td><td>EXP/LOG/EXPT</td><td>指数/对数/幂 (REAL)</td></tr>
-<tr><td>绝对值</td><td>ABS</td><td>取绝对值</td></tr>
-<tr><td>限幅</td><td>LIMIT</td><td>限制值范围</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>数据传送与转换</h3>
-<table>
-<tr><th>指令</th><th>说明</th></tr>
-<tr><td>MOVE</td><td>数据传送</td></tr>
-<tr><td>BLKMOV</td><td>块传送(常量数组传送)</td></tr>
-<tr><td>SHFR_WORD/DWORD</td><td>移位寄存器(字)</td></tr>
-<tr><td>BIT_SEQ</td><td>位定序器</td></tr>
-<tr><td>BIT_SET/CLR_WORD</td><td>位置位/清零</td></tr>
-<tr><td>BIT_TEST_WORD</td><td>位测试</td></tr>
-<tr><td>AND/OR/XOR_WORD</td><td>逻辑与/或/异或</td></tr>
-<tr><td>NOT_WORD</td><td>逻辑非</td></tr>
-<tr><td>CONV_INT_REAL</td><td>INT转REAL</td></tr>
-<tr><td>BCD_INT / INT_BCD</td><td>BCD与INT互转</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>比较指令</h3>
-<table>
-<tr><th>指令</th><th>说明</th><th>示例</th></tr>
-<tr><td>CMP_EQ</td><td>等于</td><td>%R1 == %R2</td></tr>
-<tr><td>CMP_NE</td><td>不等于</td><td>%R1 != %R2</td></tr>
-<tr><td>CMP_GT</td><td>大于</td><td>%R1 > %R2</td></tr>
-<tr><td>CMP_GE</td><td>大于等于</td><td>%R1 >= %R2</td></tr>
-<tr><td>CMP_LT</td><td>小于</td><td>%R1 < %R2</td></tr>
-<tr><td>CMP_LE</td><td>小于等于</td><td>%R1 <= %R2</td></tr>
-<tr><td>RANGE</td><td>范围检查</td><td>%R1在%R2~%R3之间</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>程序流控制指令</h3>
-<table>
-<tr><th>指令</th><th>助记符</th><th>说明</th></tr>
-<tr><td>调用</td><td>CALL</td><td>调用指定程序块，支持参数化(最多7入8出)</td></tr>
-<tr><td>跳转</td><td>JUMPN</td><td>跳转到LABELN，可嵌套，多个JUMPN可共享一个LABELN</td></tr>
-<tr><td>标号</td><td>LABELN</td><td>跳转目标位置</td></tr>
-<tr><td>主控传递</td><td>MCRN</td><td>MCRN与ENDMCRN之间的梯级断开能流</td></tr>
-<tr><td>主控结束</td><td>ENDMCRN</td><td>MCRN段结束</td></tr>
-<tr><td>逻辑结束</td><td>END</td><td>无条件终止逻辑执行</td></tr>
-<tr><td>注释</td><td>COMMENT</td><td>在程序中添加文字注释</td></tr>
-<tr><td>参数检查</td><td>ARG_PRES</td><td>检查参数值是否存在(用于可选参数)</td></tr>
-</table>
-<div class="note">MCRN段内调用的子程序不执行，但子程序内的定时器仍连续计时。JUMPN和LABELN之间的线圈保持先前状态。</div>
-</div>
-
-<div class="card">
-<h3>控制功能块</h3>
-<table>
-<tr><th>指令</th><th>说明</th></tr>
-<tr><td>DO I/O</td><td>立即刷新指定范围的I/O，不等待正常扫描</td></tr>
-<tr><td>DRUM</td><td>转鼓排序器，按步序输出16位模式</td></tr>
-<tr><td>R_TRIG / F_TRIG</td><td>上升沿/下降沿检测</td></tr>
-<tr><td>FOR_LOOP</td><td>循环执行，可配EXIT_FOR退出</td></tr>
-<tr><td>SVC_REQ</td><td>服务请求，调用PLC系统功能</td></tr>
-<tr><td>SUS_IO</td><td>暂停一次扫描的I/O刷新</td></tr>
-<tr><td>SCAN_SET_IO</td><td>扫描指定Scan Set的I/O</td></tr>
-<tr><td>SWITCH_POS</td><td>读取RUN/STOP开关位置</td></tr>
-<tr><td>MASK_IO_INTR</td><td>屏蔽/启用I/O中断</td></tr>
-<tr><td>PID_ISA / PID_IND</td><td>PID闭环控制(ISA算法/独立项算法)</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>SVC_REQ 常用服务请求</h3>
-<table>
-<tr><th>号</th><th>功能</th><th>说明</th></tr>
-<tr><td>#1</td><td>切换到STOP</td><td>程序控制CPU停机</td></tr>
-<tr><td>#2</td><td>切换到RUN</td><td>程序控制CPU运行(需开关在RUN位置)</td></tr>
-<tr><td>#7</td><td>读CPU时钟</td><td>读取日期时间到%R</td></tr>
-<tr><td>#11</td><td>写PLC故障表</td><td>用户自定义故障</td></tr>
-<tr><td>#13</td><td>清除PLC故障表</td><td>清除所有故障记录</td></tr>
-<tr><td>#14</td><td>清除I/O故障表</td><td>清除I/O故障记录</td></tr>
-<tr><td>#16</td><td>读逝去时间</td><td>读取CPU逝去时间(ms)</td></tr>
-<tr><td>#17</td><td>屏蔽I/O中断</td><td>不使用I/O变量时</td></tr>
-<tr><td>#18</td><td>读扫描时间</td><td>读取最近扫描周期时间</td></tr>
-<tr><td>#21</td><td>用户定义故障</td><td>写用户故障消息(最多24字符)</td></tr>
-<tr><td>#32</td><td>暂停/恢复I/O中断</td><td>不使用I/O变量时</td></tr>
-<tr><td>#51</td><td>读时钟纳秒值</td><td>高精度时间读取</td></tr>
-</table>
-</div>
-</div>
-
-<!-- ============ 5. ST编程 ============ -->
-<div class="section" id="s5">
-<div class="section-title"><span class="section-icon">📝</span>五、结构化文本(ST)编程</div>
-
-<div class="card">
-<h3>ST语言概述</h3>
-<p>ST是类似PASCAL的高级文本语言，适合复杂数学计算、算法和决策。支持符号变量，类似句子，易于理解。</p>
-</div>
-
-<div class="card">
-<h3>ST基本语法</h3>
-<div class="formula">// 赋值
-Motor := Switch_1 AND Switch_2;
-Temperature := (Raw_Value - 0) * 100.0 / 32000.0;
-
-// 调用程序块
-My_LDBlock();
-
-// 调用带参数的函数(实参顺序)
-abs_int(myInput, myOutput);
-
-// 调用带形参的函数(顺序无关)
-abs_int(IN := myInput, Q => myOutput, ENO => mySuccess);
-
-// 注释
-(* 这是块注释 *)
-// 这是行注释</div>
-</div>
-
-<div class="card">
-<h3>条件分支</h3>
-<div class="formula">// IF-THEN-ELSIF-ELSE-END_IF
-IF (myDint = 0) THEN
-  myTag := 1;
-ELSIF (myDint2 > 0) THEN
-  myTag := 2;
-ELSE
-  myTag := 3;
-END_IF;
-
-// CASE语句
-CASE Proc_State OF
-  INIT_STATE:  status := INITIALIZED;
-  FILL_STATE:  status := FILLING;
-  EMPTY_STATE: status := EMPTYING;
-ELSE
-  status := UNKNOWN;
-END_CASE;</div>
-</div>
-
-<div class="card">
-<h3>循环语句</h3>
-<div class="formula">// FOR循环
-FOR count := 1 TO 100 BY 2 DO
-  @Register_Pointer := count;
-  Register_Pointer := Register_Pointer + 1;
+<div class="kp-card" id="kp3-4"><div class="kp-title">3.4 间接寻址与数组应用 <span class="badge badge-tool">进阶</span></div><div class="kp-content">
+<p>项目中经常需要处理<strong>一组同类设备</strong>（如8个电机的启停控制），使用间接寻址可以大幅简化程序：</p>
+<div class="formula-block"><div class="formula-label">间接寻址示例（LD中使用COMM_REQ或ST）</div><div class="formula">// ST中使用间接寻址处理8个电机
+FOR IV_INDEX := 1 TO 8 DO
+  // 读取每个电机的启动命令（%R1~%R8）
+  START_CMD := %R[IV_INDEX];
+  
+  // 调用电机UDFB（参数通过%R数组传递）
+  UF_MOTOR(IN := START_CMD, 
+           OUT => %R[IV_INDEX + 100]);
 END_FOR;
 
-// WHILE循环
-WHILE INT_index < 100 DO
-  INT_temp := @INT_index;
-  INT_index := INT_index + 1;
-  @INT_index := INT_temp;
-END_WHILE;
+// LD中使用指针寄存器
+// %R1000 = 基地址
+// 读取 %R[%R1000] 的值</div></div>
+<div class="tip-box"><span class="tip-label">应用场景</span>间接寻址适合：配方管理（一组参数批量读写）、多台同类设备循环处理、通信数据打包发送。但要注意<strong>边界检查</strong>，防止指针越界。</div>
+</div></div>
 
-// REPEAT循环
-REPEAT
-  INT_temp := @INT_index;
-  INT_index := INT_index + 1;
-  @INT_index := INT_temp;
-UNTIL INT_index = 100
-END_REPEAT;
-
-// EXIT: 退出循环(用在WHILE和REPEAT中)
-// RETURN: 退出程序块</div>
 </div>
 
-<div class="card">
-<h3>ST运算符(优先级从高到低)</h3>
-<table>
-<tr><th>运算符</th><th>功能</th><th>示例</th></tr>
-<tr><td>()</td><td>括号</td><td>(a+b)*c</td></tr>
-<tr><td>-(负), NOT</td><td>负号/补运算</td><td>-x, NOT flag</td></tr>
-<tr><td>**</td><td>幂运算</td><td>x**2.0</td></tr>
-<tr><td>*, /, MOD</td><td>乘/除/取模</td><td>a*b, a/b, a MOD b</td></tr>
-<tr><td>+, -</td><td>加/减</td><td>a+b, a-b</td></tr>
-<tr><td><, >, <=, >=</td><td>比较</td><td>a < b</td></tr>
-<tr><td>=, <></td><td>等于/不等于</td><td>a = b, a <> b</td></tr>
-<tr><td>&, AND</td><td>布尔与</td><td>a AND b</td></tr>
-<tr><td>XOR</td><td>布尔异或</td><td>a XOR b</td></tr>
-<tr><td>OR</td><td>布尔或</td><td>a OR b</td></tr>
-</table>
-</div>
+<!-- ========== 第四章 UDFB面向对象编程实战 ========== -->
+<div class="chapter" id="ch4">
+<div class="chapter-header"><span class="ch-tag">第四章</span><h2>UDFB面向对象编程实战</h2><div class="ch-desc">UDFB概念与Class类比、参数传递机制、电机控制UDFB完整实例、UDFB库管理</div></div>
 
-<div class="card">
-<h3>ST实际应用示例</h3>
-<div class="example">
-<h4>计算油罐体积和贮油量</h4>
-<div class="formula">// 变量定义:
-// PI, DIAMETER, HEIGHT, LEVEL: REAL
-// AREA, CIRCUMFERENCE, VOLUME, CONTENTS: REAL
+<div class="kp-card" id="kp4-1"><div class="kp-title">4.1 UDFB与面向对象编程 <span class="badge badge-concept">核心</span></div><div class="kp-content">
+<p><strong>UDFB（User-Defined Function Block）</strong>是RX3i编程中最核心的概念，相当于面向对象编程中的<strong>Class（类）</strong>：</p>
+<table><tr><th>面向对象概念</th><th>UDFB对应</th><th>说明</th></tr>
+<tr><td>Class（类定义）</td><td>UDFB定义</td><td>定义功能块的逻辑和变量</td></tr>
+<tr><td>Object（对象/实例）</td><td>UDFB实例</td><td>在Program Block中调用一次产生一个实例</td></tr>
+<tr><td>成员变量</td><td>UDFB内部变量</td><td>每个实例独立保持自己的状态</td></tr>
+<tr><td>方法/成员函数</td><td>UDFB内部逻辑</td><td>实例被调用时执行的代码</td></tr>
+<tr><td>构造函数参数</td><td>输入参数</td><td>调用时传入的配置参数</td></tr>
+<tr><td>返回值</td><td>输出参数</td><td>实例执行后输出的结果</td></tr></table>
+<div class="example-box"><span class="ex-label">类比理解</span>
+<p>定义一个电机控制UDFB <code>UF_MOTOR</code>，相当于定义了一个"电机控制类"。在程序中调用3次，就创建了3个独立的电机控制实例（电机1、电机2、电机3），每个实例有自己的运行状态、故障状态、运行时间，互不干扰。</p></div>
+<div class="tip-box"><span class="tip-label">UDFB的优势</span>
+<ul><li><strong>代码复用</strong>：一套逻辑给N台同类设备用</li><li><strong>易于维护</strong>：修改逻辑只需改UDFB定义，所有实例自动更新</li><li><strong>状态独立</strong>：每个实例有自己的内部变量，互不干扰</li><li><strong>封装性</strong>：外部只需知道输入输出，内部逻辑不可见</li></ul></div>
+</div></div>
 
-PI := 3.1416;
-AREA := ((DIAMETER / 2.0) ** 2.0) * PI;
-CIRCUMFERENCE := PI * DIAMETER;
-VOLUME := AREA * HEIGHT;
-CONTENTS := AREA * LEVEL;</div>
-</div>
-<div class="example">
-<h4>模拟量标度转换</h4>
-<div class="formula">// 4-20mA输入(0-32000)转为工程量(0-100.0℃)
-// Raw: INT (0-32000), Eng: REAL (0.0-100.0)
-IF (Raw > 32000) OR (Raw < 0) THEN
-  Eng := -1.0;  // 错误值
-  Alarm := TRUE;
-ELSE
-  Eng := INT_TO_REAL(Raw) * 100.0 / 32000.0;
-  Alarm := FALSE;
-END_IF;</div>
-</div>
-</div>
-</div>
+<div class="kp-card" id="kp4-2"><div class="kp-title">4.2 UDFB三种参数传递机制 <span class="badge badge-method">参数</span></div><div class="kp-content">
+<p>UDFB支持三种参数传递方式，选择正确的方式对程序运行至关重要：</p>
+<table><tr><th>类型</th><th>关键字</th><th>说明</th><th>适用场景</th></tr>
+<tr><td><strong>输入参数</strong></td><td>IN</td><td>调用时传入值，UDFB内可读不可写</td><td>启动/停止命令、设定值</td></tr>
+<tr><td><strong>输出参数</strong></td><td>OUT</td><td>UDFB内可写，调用方读取</td><td>运行状态、故障标志</td></tr>
+<tr><td><strong>输入输出参数</strong></td><td>IN_OUT</td><td>双向传递，UDFB内可读可写</td><td>计时器累计值、步进状态</td></tr></table>
+<div class="formula-block"><div class="formula-label">UDFB参数定义示例</div><div class="formula">// UF_MOTOR 定义
+FUNCTION_BLOCK UF_MOTOR
+  // 输入参数
+  IN  START_CMD   : BOOL;    // 启动命令
+  IN  STOP_CMD    : BOOL;    // 停止命令
+  IN  FAULT_RESET : BOOL;    // 故障复位
+  IN  AUTO_MODE   : BOOL;    // 自动模式
+  
+  // 输出参数
+  OUT RUN_STATUS  : BOOL;    // 运行状态
+  OUT FAULT_FLAG  : BOOL;    // 故障标志
+  OUT READY       : BOOL;    // 就绪状态
+  
+  // 输入输出参数（有状态记忆）
+  IN_OUT RUN_TIME : DINT;    // 累计运行时间(s)
+  IN_OUT STEP     : INT;     // 当前步序
+  
+  // 内部变量（实例私有）
+  VAR
+    TMR_START   : TMR;       // 启动延时
+    INTERNAL_OK : BOOL;      // 内部就绪
+  END_VAR</div></div>
+<div class="warn-box"><span class="warn-label">关键区别</span><strong>IN_OUT参数会保持状态</strong>（断电保持），即使UDFB不被调用，参数值也不会丢失。如果需要记忆上一次的运行状态（如步序、累计值），必须用IN_OUT，不能用IN+OUT替代。</div>
+</div></div>
 
-<!-- ============ 6. 通信 ============ -->
-<div class="section" id="s6">
-<div class="section-title"><span class="section-icon">📡</span>六、通信网络</div>
+<div class="kp-card" id="kp4-3"><div class="kp-title">4.3 电机控制UDFB完整实例 <span class="badge badge-practice">实战</span></div><div class="kp-content">
+<p>以下是一个项目中最常用的<strong>电机控制UDFB</strong>完整实现，包含启动/停止/故障/运行时间累计：</p>
+<div class="formula-block"><div class="formula-label">UF_MOTOR 完整实现（LD+ST混合）</div><div class="formula">// === UDFB: UF_MOTOR ===
+// 功能：标准电机控制块
+// 输入：START_CMD, STOP_CMD, FAULT_RESET, AUTO_MODE
+//       OVERLOAD_SIG(过载信号), INTERLOCK(联锁条件)
+// 输出：RUN_STATUS, FAULT_FLAG, READY
+// 输入输出：RUN_TIME(累计运行时间s)
 
-<div class="card">
-<h3><span class="tag tag-com">COMM</span>通信协议总览</h3>
-<table>
-<tr><th>协议</th><th>端口/介质</th><th>用途</th><th>特点</th></tr>
-<tr><td>SRTP</td><td>TCP 18245</td><td>GE设备间通信/PME编程</td><td>私有协议，最常用</td></tr>
-<tr><td>EGD</td><td>UDP 广播</td><td>多PLC间周期数据共享</td><td>Producer/Consumer模式</td></tr>
-<tr><td>Modbus TCP</td><td>TCP 502</td><td>与第三方设备通信</td><td>标准协议，广泛支持</td></tr>
-<tr><td>Modbus RTU</td><td>RS-485</td><td>串行Modbus通信</td><td>老设备兼容</td></tr>
-<tr><td>OPC UA</td><td>TCP 4840</td><td>与上位机/SCADA</td><td>标准化，跨平台</td></tr>
-<tr><td>PROFINET</td><td>以太网</td><td>实时IO总线</td><td>需PNC001或CPU集成</td></tr>
-<tr><td>Genius</td><td>Genius总线</td><td>老系统分布式IO</td><td>令牌总线</td></tr>
-<tr><td>Profibus-DP</td><td>RS-485</td><td>老系统现场总线</td><td>需总线控制器模块</td></tr>
-<tr><td>SNP</td><td>RS-232</td><td>串行编程协议</td><td>老系统兼容</td></tr>
-</table>
-</div>
+// 1. 故障处理逻辑
+FAULT_FLAG := (OVERLOAD_SIG AND RUN_STATUS) 
+             OR (FAULT_FLAG AND NOT FAULT_RESET);
 
-<div class="card">
-<h3><span class="tag tag-com">EGD</span>EGD以太网全局数据（详细配置）</h3>
-<p>EGD使一个CPU(Producer)周期性分享内部数据给其他CPU(Consumer)。</p>
-<div class="formula">EGD交换(Exchange)的三个标识:
-  Producer ID - 生产者IP地址
-  Exchange ID - 交换包标识号
-  Adapter Name - 以太网接口标识号
+// 2. 就绪状态
+READY := NOT FAULT_FLAG AND INTERLOCK;
 
-配置注意事项:
-1. Local Producer ID可以不是实际IP，只是唯一标识
-2. Consumer的数据类型和长度必须与Producer一一对应
-3. Unicast一对一, Multicast一对多(广播)
-4. Consumer的update timeout设为Producer周期的3倍以上
-5. Producer周期小于100ms时会占用大量带宽，影响PME/HMI连接
-6. SPEC: 最多32个group，一个exchange最多1400 bytes</div>
-<div class="example">
-<h4>EGD配置实例</h4>
-<div class="formula">PAC_1 (192.168.101.11) → PAC_2 (192.168.101.12)
-PAC_1的%I1~I256, %R1~R20 → PAC_2的%M1~M256, %AI1~AI20
-
-PAC_1 (Producer)配置:
-  Ethernet Global Data ID: 10.10.10.101
-  Adapter Name: 机架0槽位1的ETM001
-  Exchange ID: 1
-  Destination(Consumer Group): 10.10.10
-  Produced Period: 50ms
-  数据: %I(256点) + %R(20字)
-
-PAC_2 (Consumer)配置:
-  Consumed Exchange:
-    Producer ID: 10.10.10.101
-    Exchange ID: 1
-    Update Timeout: 200ms (约3倍Producer周期)
-    接收数据存储到: %M(256点) + %AI(20字)
-
-注意: Consumer侧接收地址不能被实际I/O模块占用!</div>
-</div>
-</div>
-
-<div class="card">
-<h3><span class="tag tag-com">PN</span>PROFINET IO总线</h3>
-<p>P/C架构，兼容标准以太网，设备鉴别靠设备名+IP检测。</p>
-<table>
-<tr><th>设备类型</th><th>角色</th><th>说明</th></tr>
-<tr><td>PNC (IO Controller)</td><td>主站</td><td>IC695PNC001或CPU集成LAN2口</td></tr>
-<tr><td>PNS (IO Device)</td><td>从站</td><td>远程IO站，如IC200PNS001</td></tr>
-<tr><td>Supervisor</td><td>管理站</td><td>诊断调试</td></tr>
-</table>
-<div class="formula">PNC配置:
-  - 一个LAN支持8个PNC, 255个IO Devices
-  - 一个PNS只能从属于1个(或1对主备)PNC
-  - 3类通信关系(CR): 记录数据/IO数据/报警数据
-  - 支持环网冗余(Media Redundancy)
-  - Manager(管理者)和Client(客户端)两种角色
-
-PNS模块配置(以IC200PNS001为例):
-  Settings卡:
-    Inputs Default: 强制关闭
-    Input Status: 输入状态地址起始
-    Output Status: 输出状态地址起始
-    I/O Scan Set: 扫描方案
-  Redundancy卡: 热备冗余IO站
-  Media Redundancy卡: 环网端口选择
-
-IO站模块配置:
-  - Change Module List: 配置IO站上各模块
-  - 模拟量模块需用Change Submodule List选择信号类型
-    (如4-20mA / 0-10V / -10~10V)
-  - DO模块可设Outputs Default/Hold Last State
-  - 红色X表示配置有误</div>
-</div>
-
-<div class="card">
-<h3><span class="tag tag-com">MODBUS</span>Modbus TCP配置</h3>
-<div class="formula">CPU作为Modbus TCP Server(从站):
-  端口: 502 (固定)
-  地址映射(在CPU Settings卡使能Modbus TCP Address):
-    %I  → Coil (0x)
-    %Q  → Coil (0x) / Holding Reg (4x)
-    %AI → Input Reg (3x) / Holding Reg (4x)
-    %R  → Holding Register (4x)
-  在Modbus TCP Address卡可查看映射表
-
-CPU作为Modbus TCP Client(主站):
-  使用CHAN_FUNC指令主动读写
-  需配置对方IP、端口、寄存器地址</div>
-</div>
-
-<div class="card">
-<h3><span class="tag tag-com">OPC</span>OPC UA Server配置</h3>
-<p>在CPU的OpcUA卡配置：</p>
-<ul>
-<li>Server Enabled: 服务器使能(不用建议关闭)</li>
-<li>Automatic Start: 自动启动</li>
-<li>Certificate Expiration Date Checking: 证书有效期检查</li>
-<li>端口: 4840 (默认)</li>
-<li>安全模式: None / Sign / Sign&Encrypt</li>
-<li>认证: 匿名 / 用户名密码 / 证书</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>CPU以太网口配置</h3>
-<p>以CPE330为例，CPU内置以太网口参数(Settings卡)：</p>
-<ul>
-<li>IP Address / Subnet Mask / Gateway</li>
-<li>LAN1 mode: 1号网络功能</li>
-<li>LAN2 mode: 2号网络功能(以太网/PNC)</li>
-<li>Network Time Sync: SNTP网络时钟同步</li>
-<li>Status Address: 模块状态地址(建议放高地址)</li>
-<li>Redundant IP: 冗余IP(仅热备系统)</li>
-</ul>
-<p>独立以太网模块ETM001配置类似，额外有Front Panel端口(前面板编程口)。</p>
-</div>
-
-<div class="card">
-<h3>双机热备冗余</h3>
-<p>CPU属性中Enable Redundancy使能。热备系统配置：</p>
-<ul>
-<li>主CPU和备CPU通过以太网同步数据</li>
-<li>ETM001配置Redundant IP地址</li>
-<li>切换时间: 典型50-200ms</li>
-<li>PNC支持主备冗余(一个PNS从属于1对PNC)</li>
-<li>EGD支持冗余Producer</li>
-</ul>
-</div>
-</div>
-
-<!-- ============ 7. 硬件配置 ============ -->
-<div class="section" id="s7">
-<div class="section-title"><span class="section-icon">🔧</span>七、硬件配置详解</div>
-
-<div class="card">
-<h3><span class="tag tag-hw">HWC</span>硬件组态(HWC)要点</h3>
-<ul>
-<li>配置必须与实际硬件完全一致(型号、顺序、信号)</li>
-<li>注意槽位号，有些模块占用2个槽位</li>
-<li>7槽/16槽通用背板支持IC695*(PCI)和IC694*(串行)混插</li>
-<li>电源功率必须≥所有模块功耗之和，建议预留20%余量</li>
-<li>模块分类: DI/DO/DI混合/AI/AO/AI混合/通信/总线控制/运动/电源/CPU/特殊</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>CPU参数详解（以CPE330为例）</h3>
-<p><strong>Settings卡:</strong></p>
-<ul>
-<li>Passwords: 激活PLC密码功能</li>
-<li>Stop-Mode I/O Scanning: 停止模式IO扫描类型</li>
-<li>Watchdog Timer: 看门狗定时器(扫描超时报警)</li>
-<li>Logic/Config Power-up Source: 上电程序来源(内存/闪存)</li>
-<li>Run/Stop Switch: 开关运行/停止功能</li>
-<li>Power-up Mode: 上电模式(运行/停止/上次)</li>
-<li>Modbus Address Space Mapping: MTP地址映射使能</li>
-<li>LAN1/LAN2 mode: 网络功能选择</li>
-<li>Network Time Sync: SNTP时钟同步</li>
-</ul>
-<p><strong>Scan卡:</strong></p>
-<ul>
-<li>Sweep Mode: Normal/Constant Window/Constant Sweep</li>
-<li>Controller Communication Windows Mode: 限制/完全</li>
-<li>Controller Communication Windows Timer: 通信窗口时间</li>
-<li>Backplane Communication Windows: 背板通信窗口</li>
-<li>Background Communication Windows Timer: 后台窗口</li>
-<li>Number of Last Scans: 停机时保存的扫描次数</li>
-</ul>
-<p><strong>Faults卡:</strong></p>
-<ul>
-<li>Loss of Rack: 丢失机架(诊断/致命)</li>
-<li>Loss of I/O Module: 丢失IO模块</li>
-<li>System Bus Error: 系统总线错误</li>
-<li>System Configuration Mismatch: 配置不符</li>
-<li>CPU Over Temperature: CPU超温</li>
-<li>Controller/I/O Fault Table Size: 故障表大小</li>
-</ul>
-<p><strong>Scan Sets卡:</strong></p>
-<ul>
-<li>控制每个模块数据的扫描频率</li>
-<li>Scan Type: Disabled/Fixed Scan</li>
-<li>Number of Sweeps: 扫描周期倍数</li>
-<li>Output Delay: 输出延迟</li>
-<li>配合模块的I/O Scan Set参数使用</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>I/O模块配置要点</h3>
-<p><strong>DI模块(以IC695MDL655为例):</strong></p>
-<ul>
-<li>Inputs Data: 输入数据起始地址</li>
-<li>I/O Scan Set: 扫描方案</li>
-<li>DC Filter Select: DC滤波选择</li>
-<li>Report Faults: 报告故障</li>
-</ul>
-<p><strong>DO模块(以IC695MDL754为例):</strong></p>
-<ul>
-<li>Outputs Data: 输出数据起始地址</li>
-<li>Outputs Default / Hold Last State: 故障时输出行为</li>
-<li>可设每个点的输出默认值</li>
-</ul>
-<p><strong>AI模块(以IC695ALG600为例):</strong></p>
-<ul>
-<li>需为每个通道选择信号类型(4-20mA/0-10V等)</li>
-<li>使用Change Submodule List配置通道类型</li>
-<li>Input Data: 模拟量输入数据起始地址</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>SNTP时钟同步配置</h3>
-<div class="formula">SNTP Mode: Unicast(点播) / Multicast/Broadcast
-Unicast模式:
-  Primary IP Address: 主时间服务器IP
-  Secondary IP Address: 备时间服务器IP
-  CPU TOD Clock Sync: 同步CPU时钟
-  Poll Interval: 轮询间隔
-  Poll Count: 轮询计数
-  Poll Timeout: 轮询超时</div>
-</div>
-
-<div class="card">
-<h3>访问控制(Access Control)</h3>
-<p>Target的Enhanced Security使能后可配置(最多64条规则)：</p>
-<table>
-<tr><th>属性</th><th>说明</th></tr>
-<tr><td>Number</td><td>编号(最大64)</td></tr>
-<tr><td>Memory Area</td><td>内存区域(%I/%Q/%R/%AI/%AQ等)</td></tr>
-<tr><td>Start</td><td>起始地址</td></tr>
-<tr><td>End</td><td>结束地址</td></tr>
-<tr><td>Access</td><td>访问权限(只读/读写)</td></tr>
-</table>
-</div>
-</div>
-
-<!-- ============ 8. PID控制 ============ -->
-<div class="section" id="s8">
-<div class="section-title"><span class="section-icon">🌡️</span>八、PID控制</div>
-
-<div class="card">
-<h3><span class="tag tag-fb">PID</span>PID功能块</h3>
-<p>PACSystems提供两种PID算法：</p>
-<ul>
-<li><strong>PID_ISA</strong>: 标准ISA PID算法(Interacting)</li>
-<li><strong>PID_IND</strong>: 独立项算法(Non-interacting)</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>PID控制块结构(40个字)</h3>
-<div class="formula">PID参数块: 40个字(前13个可配置, 后27个CPU使用)
-
-字0:  SP(设定值) - 与PV同范围
-字1:  PV(过程变量) - 来自传感器
-字2:  采样时间(ms) - 最小10ms
-字3:  KP(比例增益)
-字4:  KI(积分增益)
-字5:  KD(微分增益)
-字6:  CV偏差(死区)
-字7:  PV下限
-字8:  PV上限
-字9:  CV下限
-字10: CV上限
-字11: CV最小变化时间(ms)
-字12: 手动命令值(手动模式时设CV)
-字13: 控制输出CV(自动模式输出)
-字14~39: CPU内部使用(不可配置)</div>
-</div>
-
-<div class="card">
-<h3>PID操作模式</h3>
-<div class="formula">自动模式:
-  Enable=ON, Manual=OFF
-  → PID自动计算CV输出
-  → CV存储在%Ref+13
-  → 手动命令跟踪CV值(无冲击切换)
-
-手动模式:
-  Enable=ON, Manual=ON
-  → CV = 手动命令值(%Ref+12)
-  → UP/DN输入可手动增减CV
-  → 积分器持续更新(无冲击切换)
-
-关键特性:
-  - 最小执行间隔: 10ms
-  - 最大执行间隔: 10.9分钟
-  - 所有参数为16位整型
-  - PV/SP缩放范围: 0~32000 或 0~10000(0.00%~100.00%)
-  - 一个PID函数不能在一个扫描周期内多次调用
-  - 每个PID必须用不同的40字存储区域</div>
-</div>
-
-<div class="card">
-<h3>PID参数整定建议</h3>
-<ul>
-<li>先设KI=0, KD=0，只调KP到系统振荡</li>
-<li>KP设为振荡值的60%</li>
-<li>逐步增加KI直到系统再次振荡，设KI为振荡值的50%</li>
-<li>如有需要逐步增加KD减少超调</li>
-<li>使用临时线圈监控PID参数变化</li>
-<li>调好后可将参数作为常量用BLKMOV定义</li>
-</ul>
-<div class="warn">长时间延时后调用自动模式PID，需用SVC_REQ 16或51更新%Ref+23(最后运行时间)，避免积分器出错。</div>
-</div>
-</div>
-
-<!-- ============ 9. 中断 ============ -->
-<div class="section" id="s9">
-<div class="section-title"><span class="section-icon">⚡</span>九、中断驱动块</div>
-
-<div class="card">
-<h3>三种中断类型</h3>
-<table>
-<tr><th>类型</th><th>触发源</th><th>说明</th></tr>
-<tr><td>时间中断</td><td>CPU定时器</td><td>按指定时间间隔执行，可设初始延时</td></tr>
-<tr><td>I/O中断</td><td>I/O模块</td><td>DI上升/下降沿、模拟量报警、高速计数</td></tr>
-<tr><td>模块中断</td><td>VME模块</td><td>每个模块支持一个中断</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>时间中断配置</h3>
-<div class="formula">在块的Scheduling属性中配置:
-  Time Base(时基): 1.0s / 0.10s / 0.01s / 0.001s
-  Interval(间隔): 时基倍数
-  Delay(延时): 可选, 首次执行的额外延时
-
-首次执行时间 = (延时×时基) + (间隔×时基)
-
-示例: 1ms定时中断
-  Time Base: 0.001s
-  Interval: 1
-  → 每1ms执行一次</div>
-</div>
-
-<div class="card">
-<h3>中断调度模式</h3>
-<table>
-<tr><th>模式</th><th>中断数</th><th>优先级</th><th>说明</th></tr>
-<tr><td>普通块调度</td><td>64个IO/模块中断 + 16个时间中断</td><td>相同</td><td>默认模式</td></tr>
-<tr><td>优先级块调度</td><td>32个中断触发</td><td>可分配</td><td>高优先级可打断低优先级</td></tr>
-</table>
-<div class="warn">不要从_MAIN或非中断块中调用中断驱动块！中断块使用独立堆栈，嵌套调用过多会导致"应用堆栈溢出"故障。</div>
-</div>
-
-<div class="card">
-<h3>中断实际应用示例</h3>
-<div class="example">
-<h4>记录DI变位时间(精度1ms/ns)</h4>
-<div class="formula">// 中断块 TIS_LDBK (时间中断, 1ms)
-// 功能: 当%I1发生Off→On变位时记录精确时间
-
-// 第1行: 初始化
-BLKMOV → %R1~R2, %R21~R22 (R22初始值=4)
-
-// 第2行: 即时扫描输入
-DO_IO(%I1~%I16)
-
-// 第3行: 读取系统日期时间
-SVC_REQ #7 → %R1001~R1006 (年月日时分秒)
-
-// 第4行: 读取纳秒值
-SVC_REQ #51 → %R21~R22 (纳秒精度)
-
-// 结果存储到 %R01001+ 区域
-// 例: 2015年4月8日 15:41:32.74853790秒</div>
-</div>
-</div>
-</div>
-
-<!-- ============ 10. 系统变量 ============ -->
-<div class="section" id="s10">
-<div class="section-title"><span class="section-icon">📊</span>十、系统状态变量</div>
-
-<div class="card">
-<h3>%S 只读系统变量（常用）</h3>
-<table>
-<tr><th>变量</th><th>说明</th></tr>
-<tr><td>%S0001</td><td>始终ON</td></tr>
-<tr><td>%S0002</td><td>始终ON</td></tr>
-<tr><td>%S0003</td><td>始终OFF</td></tr>
-<tr><td>%S0004</td><td>1Hz方波(0.5s ON/0.5s OFF)</td></tr>
-<tr><td>%S0005</td><td>1秒脉冲(用于闪烁指示灯)</td></tr>
-<tr><td>%S0009</td><td>诊断状态(0=正常, 1=有故障)</td></tr>
-<tr><td>%S0010</td><td>I/O模块故障</td></tr>
-<tr><td>%S0013</td><td>CPU电池低</td></tr>
-<tr><td>%S0025</td><td>恒定扫描超时</td></tr>
-<tr><td>%S0034</td><td>首次扫描脉冲(仅第一个扫描周期ON，用于初始化)</td></tr>
-<tr><td>%S0036</td><td>CPU在RUN模式</td></tr>
-</table>
-</div>
-
-<div class="card">
-<h3>%SA/%SB/%SC 可写系统变量</h3>
-<table>
-<tr><th>前缀</th><th>特性</th><th>说明</th></tr>
-<tr><td>%SA</td><td>断电保持</td><td>用户定义故障可设定%SA0081~%SA0112</td></tr>
-<tr><td>%SB</td><td>时钟驱动</td><td>按时间更新的状态</td></tr>
-<tr><td>%SC</td><td>故障驱动</td><td>故障发生时更新</td></tr>
-</table>
-<div class="note">%S是只读的，不要向其写入数据。可以向%SA/%SB/%SC写入数据。用户定义故障(Service Request 21)可设定%SA0081~%SA0112系统状态变量。</div>
-</div>
-
-<div class="card">
-<h3>常用应用技巧</h3>
-<div class="formula">// 首次扫描初始化
-IF %S0034 THEN  // 仅第一个扫描周期
-  (* 初始化变量 *)
-  Counter := 0;
-  Mode := INIT;
+// 3. 启动停止逻辑（自保回路）
+IF START_CMD AND READY AND NOT FAULT_FLAG THEN
+  RUN_STATUS := TRUE;
 END_IF;
 
-// 1秒闪烁指示灯
-Light := %S0005;  // 1秒脉冲
+IF STOP_CMD OR FAULT_FLAG OR NOT INTERLOCK THEN
+  RUN_STATUS := FALSE;
+END_IF;
 
-// 0.5秒闪烁(更快)
-Light := %S0004;  // 1Hz方波
+// 4. 运行时间累计（每秒+1）
+IF RUN_STATUS THEN
+  // 使用1秒系统时钟脉冲%S0002
+  IF %S0002 THEN  // 1Hz时钟脉冲
+    RUN_TIME := RUN_TIME + 1;
+  END_IF;
+END_IF;
 
-// 运行指示
-Run_Light := %S0036;  // CPU在RUN时ON
+// 5. 输出到物理DO（在Program Block中映射）
+// DO_MOTOR_RUN := Motor_Instance.RUN_STATUS;</div></div>
+<h4>在Program Block中调用UDFB</h4>
+<div class="formula-block"><div class="formula-label">调用实例（LD块中）</div><div class="formula">// 电机1实例
+Motor_1: UF_MOTOR(
+  START_CMD    := DI_M1_START,
+  STOP_CMD     := DI_M1_STOP,
+  FAULT_RESET  := DI_M1_RST,
+  AUTO_MODE    := AUTO_MODE,
+  OVERLOAD_SIG := DI_M1_OL,
+  INTERLOCK    := M1_INTERLOCK_OK,
+  RUN_STATUS   => DO_M1_RUN,
+  FAULT_FLAG   => M1_FAULT,
+  READY        => M1_READY,
+  RUN_TIME     := M1_RUN_TIME,
+  STEP         := M1_STEP
+);
 
-// 电池低报警
-Battery_Alarm := %S0013;</div>
-</div>
-</div>
+// 电机2实例（同一UDFB，不同参数）
+Motor_2: UF_MOTOR(
+  START_CMD    := DI_M2_START,
+  ...
+);</div></div>
+<div class="tip-box"><span class="tip-label">实际项目应用</span>
+<ul><li>建立标准UDFB库：电机、阀门、PID、模拟量转换、通信处理等</li><li>每个UDFB单独一个文件，命名规范统一（UF_前缀）</li><li>UDFB库可以在不同项目间复用，大幅提高开发效率</li><li>修改UDFB定义后，所有调用实例自动更新</li></ul></div>
+</div></div>
 
-<!-- ============ 11. Cimplicity ============ -->
-<div class="section" id="s11">
-<div class="section-title"><span class="section-icon">🖥️</span>十一、Cimplicity上位机</div>
+<div class="kp-card" id="kp4-4"><div class="kp-title">4.4 阀门控制UDFB实例 <span class="badge badge-practice">实战</span></div><div class="kp-content">
+<div class="formula-block"><div class="formula-label">UF_VALVE 阀门控制块</div><div class="formula">// === UDFB: UF_VALVE ===
+// 功能：气动/电动阀门控制
+// 支持：开/关控制、到位检测、超时报警
 
-<div class="card">
-<h3><span class="tag tag-scada">SCADA</span>Cimplicity工程结构</h3>
-<div class="formula">Cimplicity Project
-├─ Devices (设备)
-│   └─ PLC连接 (SRTP/OPC UA/Modbus TCP)
-├─ Points (点位)
-│   ├─ Digital Points (数字量)
-│   └─ Analog Points (模拟量)
-├─ Screens (画面)
-│   ├─ Main (主画面)
-│   ├─ Alarm (报警画面)
-│   └─ Trend (趋势画面)
-├─ Alarms (报警配置)
-│   ├─ Categories (报警分类)
-│   └─ Messages (报警消息)
-├─ Trends (趋势配置)
-├─ Scripts (CimEdit Basic脚本)
-└─ Users (用户权限)</div>
-</div>
+// 输入参数
+IN  OPEN_CMD    : BOOL;   // 开阀命令
+IN  CLOSE_CMD   : BOOL;   // 关阀命令
+IN  OPEN_LIMIT  : BOOL;   // 开到位信号
+IN  CLOSE_LIMIT : BOOL;   // 关到位信号
+IN  TIMEOUT_MS  : INT;    // 动作超时(ms)
 
-<div class="card">
-<h3>设备连接配置</h3>
-<table>
-<tr><th>方式</th><th>协议</th><th>端口</th><th>推荐场景</th></tr>
-<tr><td>GE SRTP</td><td>SRTP</td><td>TCP 18245</td><td>直连RX3i，最常用</td></tr>
-<tr><td>OPC UA</td><td>OPC UA</td><td>TCP 4840</td><td>新项目，跨平台</td></tr>
-<tr><td>OPC DA</td><td>OPC DA</td><td>DCOM</td><td>老项目维护</td></tr>
-<tr><td>Modbus TCP</td><td>Modbus</td><td>TCP 502</td><td>第三方设备</td></tr>
-</table>
-</div>
+// 输出参数
+OUT OPEN_OUTPUT : BOOL;   // 开阀输出
+OUT CLOSE_OUTPUT: BOOL;   // 关阀输出
+OUT FULL_OPEN   : BOOL;   // 全开到位
+OUT FULL_CLOSE  : BOOL;   // 全关到位
+OUT TIMEOUT_FAULT: BOOL;  // 超时故障
 
-<div class="card">
-<h3>点位(Point)配置</h3>
-<table>
-<tr><th>属性</th><th>说明</th></tr>
-<tr><td>Point ID</td><td>点位唯一标识，如 TEMP_PV</td></tr>
-<tr><td>Device</td><td>关联的PLC设备</td></tr>
-<tr><td>Address</td><td>PLC地址: R0001 / I00001 / AI0001</td></tr>
-<tr><td>Type</td><td>BIT / WORD / DWORD / REAL</td></tr>
-<tr><td>Scan Rate</td><td>采集周期(ms)，如500ms</td></tr>
-<tr><td>Alarm Enabled</td><td>是否启用报警</td></tr>
-</table>
-<div class="formula">地址映射示例:
-  PLC %R0001 → Point: TEMP_PV (REAL, 500ms)
-  PLC %I00001 → Point: MOTOR_RUN (BIT, 200ms)
-  PLC %AQ0001 → Point: VALVE_OUT (WORD, 500ms)</div>
-</div>
+// 内部变量
+VAR
+  TMR_OPEN  : OFDT;   // 开阀超时定时器
+  TMR_CLOSE : OFDT;   // 关阀超时定时器
+END_VAR
 
-<div class="card">
-<h3>画面开发(CimEdit)</h3>
-<ul>
-<li><strong>图形对象</strong>: 按钮、指示灯、仪表盘、管道、储罐等</li>
-<li><strong>动画绑定</strong>: 对象属性绑定到Point</li>
-<li><strong>脚本</strong>: CimEdit Basic处理交互逻辑</li>
-<li><strong>SmartObjects</strong>: 可复用的智能对象组件</li>
-</ul>
-<div class="formula">// 指示灯颜色绑定:
-Point = MOTOR_RUN
-  Color.Green when Point == 1
-  Color.Red when Point == 0
+// === 逻辑 ===
+// 开阀控制
+OPEN_OUTPUT := OPEN_CMD AND NOT FULL_OPEN AND NOT TIMEOUT_FAULT;
+CLOSE_OUTPUT := CLOSE_CMD AND NOT FULL_CLOSE AND NOT TIMEOUT_FAULT;
 
-// 数值显示:
-Point = TEMP_PV
-  Format = "##.#" C
+// 到位检测
+FULL_OPEN := OPEN_LIMIT;
+FULL_CLOSE := CLOSE_LIMIT;
 
-// 按钮脚本:
-Sub Button_Click()
-  SetPoint "MOTOR_START", 1
-End Sub</div>
+// 超时检测
+TMR_OPEN(IN := OPEN_OUTPUT, PT := TIMEOUT_MS);
+TMR_CLOSE(IN := CLOSE_OUTPUT, PT := TIMEOUT_MS);
+TIMEOUT_FAULT := TMR_OPEN.Q OR TMR_CLOSE.Q;
+
+// 故障复位（到位后清除）
+IF FULL_OPEN OR FULL_CLOSE THEN
+  // 定时器自动复位
+END_IF;</div></div>
+</div></div>
+
 </div>
 
-<div class="card">
-<h3>报警系统</h3>
-<table>
-<tr><th>类型</th><th>触发条件</th><th>示例</th></tr>
-<tr><td>高限</td><td>Point > High Limit</td><td>温度 > 80C</td></tr>
-<tr><td>低限</td><td>Point < Low Limit</td><td>液位 < 10%</td></tr>
-<tr><td>高高限</td><td>Point > HighHigh Limit</td><td>温度 > 95C(紧急)</td></tr>
-<tr><td>状态</td><td>离散点变化</td><td>电机故障=ON</td></tr>
-<tr><td>偏差</td><td>|PV-SP| > Deadband</td><td>偏差>5%</td></tr>
-</table>
-</div>
-</div>
+<!-- ========== 第五章 LD与ST编程应用 ========== -->
+<div class="chapter" id="ch5">
+<div class="chapter-header"><span class="ch-tag">第五章</span><h2>LD与ST编程应用</h2><div class="ch-desc">梯形图常用指令实战、ST语法与实际应用、混合编程策略</div></div>
 
-<!-- ============ 12. 故障处理 ============ -->
-<div class="section" id="s12">
-<div class="section-title"><span class="section-icon">🚨</span>十二、故障处理</div>
+<div class="kp-card" id="kp5-1"><div class="kp-title">5.1 梯形图核心指令项目应用 <span class="badge badge-tool">指令</span></div><div class="kp-content">
+<h4>定时器指令</h4>
+<table><tr><th>指令</th><th>功能</th><th>项目应用</th></tr>
+<tr><td><strong>TMR</strong></td><td>通电延时</td><td>电机启动延时、阀动作超时检测</td></tr>
+<tr><td><strong>ONDTR</strong></td><td>保持型通电延时</td><td>累计运行时间、保养提醒</td></tr>
+<tr><td><strong>OFDT</strong></td><td>断电延时</td><td>电机停止后风机延时停、阀门关到位超时</td></tr></table>
+<div class="formula-block"><div class="formula-label">定时器应用示例</div><div class="formula">// 电机启动延时（星三角启动）
+TMR_STAR(IN := START_CMD, PT := 3000);  // 3秒星形启动
+IF TMR_STAR.Q THEN
+  STAR_OUTPUT := FALSE;
+  DELTA_OUTPUT := TRUE;  // 切换到三角形
+END_IF;
 
-<div class="card">
-<h3>两种故障表</h3>
-<table>
-<tr><th>故障表</th><th>记录内容</th><th>查看方式</th></tr>
-<tr><td>PLC故障表</td><td>CPU内部故障(密码侵权/配置不符/奇偶错误/通信错误)</td><td>Navigator右键Target → Diagnostics</td></tr>
-<tr><td>I/O故障表</td><td>I/O设备故障(回路故障/地址冲突/模块增减/总线故障)</td><td>同上，最多64条</td></tr>
-</table>
-</div>
+// 阀门超时检测
+TMR_VALVE(IN := OPEN_OUTPUT AND NOT OPEN_LIMIT, 
+           PT := 10000);  // 10秒超时
+IF TMR_VALVE.Q THEN
+  VALVE_TIMEOUT := TRUE;
+END_IF;</div></div>
+<h4>计数器指令</h4>
+<table><tr><th>指令</th><th>功能</th><th>项目应用</th></tr>
+<tr><td><strong>UPCTR</strong></td><td>递增计数器</td><td>瓶数统计、产量计数</td></tr>
+<tr><td><strong>DNCTR</strong></td><td>递减计数器</td><td>配方批量倒计数</td></tr></table>
+<h4>比较指令</h4>
+<p>项目中最常用的判断逻辑：</p>
+<div class="formula-block"><div class="formula-label">比较指令示例</div><div class="formula">// 液位高低限判断
+EQ(IV_LEVEL, 50);         // 液位等于50
+NE(IV_LEVEL, 0);          // 液位不等于0
+GT(RV_TEMP, 85.5);        // 温度大于85.5℃
+LT(RV_PRESSURE, 0.5);     // 压力低于0.5MPa
+RANGE(25, 75, RV_PH);     // PH在25-75范围内</div></div>
+</div></div>
 
-<div class="card">
-<h3>故障信息字段</h3>
-<table>
-<tr><th>字段</th><th>说明</th></tr>
-<tr><td>位置</td><td>机架号.槽号</td></tr>
-<tr><td>描述</td><td>故障组对应的描述文本</td></tr>
-<tr><td>日期/时间</td><td>基于CPU时钟</td></tr>
-<tr><td>错误代码</td><td>每个故障组有独立的错误代码集</td></tr>
-<tr><td>组</td><td>最高类别故障分类</td></tr>
-<tr><td>动作</td><td>致命/自诊断/信息</td></tr>
-</table>
-</div>
+<div class="kp-card" id="kp5-2"><div class="kp-title">5.2 SVC_REQ服务请求指令 <span class="badge badge-method">系统</span></div><div class="kp-content">
+<p><code>SVC_REQ</code>是RX3i中最强大的系统服务指令，通过不同的功能码调用系统功能：</p>
+<table><tr><th>功能码</th><th>功能</th><th>项目应用</th></tr>
+<tr><td>#7</td><td>读取扫描时间</td><td>监控CPU负载</td></tr>
+<tr><td>#13</td><td>复位看门狗</td><td>长任务执行时刷新</td></tr>
+<tr><td>#14</td><td>读取日期时间</td><td>故障时间记录、班次判断</td></tr>
+<tr><td>#21</td><td>写用户定义故障</td><td>自定义故障写入PLC故障表</td></tr>
+<tr><td>#29</td><td>读取PLC状态</td><td>获取运行/停止/故障状态</td></tr>
+<tr><td>#51</td><td>读取模块状态</td><td>检查I/O模块健康状态</td></tr></table>
+<div class="example-box"><span class="ex-label">实际应用：故障记录</span>
+<div class="formula-block"><div class="formula">// 当检测到温度超限时，写入用户故障到PLC故障表
+IF RV_TEMP > TEMP_HH_LIMIT THEN
+  SVC_REQ(#21, 
+          FAULT_CODE := 1001,  // 故障码
+          FAULT_MSG := '温度高高报警',
+          ACTION := 1);        // 1=仅记录,2=停机
+END_IF;</div></div>
+</div></div>
 
-<div class="card">
-<h3>可配置的故障动作</h3>
-<p>在CPU的Faults卡可配置每种故障的动作：</p>
-<ul>
-<li><strong>致命(Fatal)</strong>: CPU切换到STOP</li>
-<li><strong>诊断(Diagnostic)</strong>: 记录故障但继续运行</li>
-<li><strong>信息(Informational)</strong>: 仅记录信息</li>
-</ul>
-<table>
-<tr><th>故障</th><th>默认动作</th><th>可配置</th></tr>
-<tr><td>丢失机架</td><td>致命</td><td>是</td></tr>
-<tr><td>丢失I/O模块</td><td>诊断</td><td>是</td></tr>
-<tr><td>系统总线错误</td><td>致命</td><td>是</td></tr>
-<tr><td>配置不符</td><td>致命</td><td>是</td></tr>
-<tr><td>CPU超温</td><td>致命</td><td>否</td></tr>
-<tr><td>电池低压</td><td>信息</td><td>否</td></tr>
-</table>
-</div>
+<div class="kp-card" id="kp5-3"><div class="kp-title">5.3 ST编程实战应用 <span class="badge badge-practice">ST</span></div><div class="kp-content">
+<p>ST（结构化文本）适合处理<strong>复杂逻辑、数学运算、循环和条件分支</strong>，是LD无法替代的：</p>
+<h4>ST语法速查</h4>
+<table><tr><th>语法</th><th>功能</th><th>示例</th></tr>
+<tr><td>:=</td><td>赋值</td><td>RV_TEMP := 25.0;</td></tr>
+<tr><td>IF-ELSIF-ELSE-END_IF</td><td>条件分支</td><td>见下方示例</td></tr>
+<tr><td>CASE-OF-END_CASE</td><td>多分支选择</td><td>状态机实现</td></tr>
+<tr><td>FOR-TO-DO-END_FOR</td><td>循环</td><td>数组遍历</td></tr>
+<tr><td>WHILE-DO-END_WHILE</td><td>条件循环</td><td>数据处理</td></tr>
+<tr><td>AND/OR/NOT/XOR</td><td>逻辑运算</td><td>A AND B OR NOT C</td></tr>
+<tr><td>+ - * / MOD</td><td>算术运算</td><td>R := A + B * C;</td></tr></table>
+<div class="formula-block"><div class="formula-label">ST实际应用：批量配方加载</div><div class="formula">// 从%R数组加载配方到各设定值
+// 配方存储在%R1000开始的连续区域
+// 每个配方包含：温度SP、压力SP、流量SP、时间(共4个字)
 
-<div class="card">
-<h3>用户定义故障</h3>
-<div class="formula">// 使用 SVC_REQ #21 创建用户定义故障
-// 最多24字符描述消息(不含null终止符)
-// 故障显示在PLC故障表中,错误代码会加-32768(8000h)
+FOR IV_I := 0 TO 9 DO  // 10个配方
+  // 计算基地址
+  IV_BASE := 1000 + IV_I * 4;
+  
+  // 读取配方数据
+  RV_TEMP_SP[IV_I]  := INT_TO_REAL(%R[IV_BASE]);
+  RV_PRESS_SP[IV_I] := INT_TO_REAL(%R[IV_BASE + 1]);
+  RV_FLOW_SP[IV_I]  := INT_TO_REAL(%R[IV_BASE + 2]);
+  IV_TIME_SP[IV_I]  := %R[IV_BASE + 3];
+END_FOR;
 
-// 示例: 自定义温度过高故障
-SVC_REQ #21(
-  Error_Code := 5,
-  Message := "Tank Temp Too High"  // 最多24字符
-)
-// 显示时错误代码为: 5 + (-32768) = -32763
+// 根据当前配方号激活设定值
+RV_TEMP_ACTIVE  := RV_TEMP_SP[IV_RECIPE_NO];
+RV_PRESS_ACTIVE := RV_PRESS_SP[IV_RECIPE_NO];
+RV_FLOW_ACTIVE  := RV_FLOW_SP[IV_RECIPE_NO];
+IV_TIME_ACTIVE  := IV_TIME_SP[IV_RECIPE_NO];</div></div>
+<div class="tip-box"><span class="tip-label">LD与ST的选择</span>
+<ul><li><strong>用LD</strong>：简单的启停逻辑、自保回路、联锁（直观、电气人员易懂）</li><li><strong>用ST</strong>：数学运算、循环处理、复杂条件判断、数据处理（简洁高效）</li><li><strong>混合使用</strong>：在一个Program Block中可以同时包含LD段和ST段</li></ul></div>
+</div></div>
 
-// 特定用户故障可设定系统状态变量 %SA0081~%SA0112
-// 可在程序中用触点检测这些变量</div>
-</div>
-
-<div class="card">
-<h3>清除故障</h3>
-<ul>
-<li>SVC_REQ #13: 清除PLC故障表</li>
-<li>SVC_REQ #14: 清除I/O故障表</li>
-<li>I/O故障表最多64条，满了后保留最早32条和最新32条</li>
-</ul>
-</div>
-</div>
-
-<!-- ============ 13. 调试技巧 ============ -->
-<div class="section" id="s13">
-<div class="section-title"><span class="section-icon">🔍</span>十三、调试技巧与经验</div>
-
-<div class="card">
-<h3>在线调试功能</h3>
-<table>
-<tr><th>功能</th><th>操作</th><th>说明</th></tr>
-<tr><td>在线监控</td><td>Connect → 双击程序块</td><td>实时查看梯形图状态</td></tr>
-<tr><td>强制变量</td><td>右键变量 → Force</td><td>强制I/Q/R值，调试用</td></tr>
-<tr><td>写入变量</td><td>右键变量 → Write</td><td>临时修改变量值</td></tr>
-<tr><td>Turn ON/OFF</td><td>右键BOOL变量</td><td>快速置位/复位</td></tr>
-<tr><td>Data Watch</td><td>View → Data Watch</td><td>变量监控表</td></tr>
-<tr><td>程序比较</td><td>右键 → Compare</td><td>在线与离线差异对比</td></tr>
-<tr><td>交叉引用</td><td>Reference View</td><td>查找变量所有使用位置</td></tr>
-<tr><td>故障表</td><td>右键Target → Diagnostics</td><td>查看PLC和I/O故障</td></tr>
-</table>
-<div class="warn">强制变量后忘记取消可能导致设备意外动作！调试结束后务必清除所有强制值。</div>
 </div>
 
-<div class="card">
-<h3>第一次连机常见问题</h3>
-<div class="note">
-<p><strong>杀毒软件干扰</strong>: 杀毒软件对PME影响很大，设置临时IP成功但下载失败</p>
-<p><strong>解决方案</strong>:</p>
-<ul>
-<li>仔细看Feedback Zone的内容和Fault Table的内容</li>
-<li>Error可能是同一工程下其他Target的编译错误</li>
-<li>可能是SYS FLT没有清空</li>
-<li>可能是CPU Flash里有旧配置与新配置不匹配</li>
-<li>查看GFK-2222 Diagnostics部分看fault table提示的错误GROUP</li>
-<li>可尝试用串口连机(不要下载到Flash，太浪费时间)</li>
-<li>临时关闭杀毒软件再试</li>
-</ul>
-</div>
+<!-- ========== 第六章 通信网络配置实战 ========== -->
+<div class="chapter" id="ch6">
+<div class="chapter-header"><span class="ch-tag">第六章</span><h2>通信网络配置实战</h2><div class="ch-desc">SRTP通信、EGD数据交换、Modbus TCP/RTU、Profinet配置、OPC UA</div></div>
+
+<div class="kp-card" id="kp6-1"><div class="kp-title">6.1 SRTP通信与Cimplicity连接 <span class="badge badge-method">通信</span></div><div class="kp-content">
+<p><strong>SRTP（Service Request Transport Protocol）</strong>是GE/Emerson PLC的标准以太网通信协议，Cimplicity默认使用SRTP连接PLC：</p>
+<h4>配置步骤</h4>
+<ol><li><strong>CPU以太网口配置</strong>：在HWC中设置IP地址（如192.168.1.10）、子网掩码（255.255.255.0）</li><li><strong>Cimplicity设备配置</strong>：在Cimplicity中添加PLC设备，选择GE SRTP驱动，填入CPU的IP地址</li><li><strong>点位映射</strong>：在Cimplicity中创建点位，地址对应PLC的%I/%Q/%R/%AI/%AQ等</li></ol>
+<div class="formula-block"><div class="formula-label">Cimplicity点位地址对应关系</div><div class="formula">// Cimplicity Point Address 格式
+DI_START    -> %I00001     (对应PLC %I00001)
+DO_MOTOR    -> %Q00001     (对应PLC %Q00001)
+RV_TEMP_PV  -> %R00001     (对应PLC %R00001, REAL占2个字)
+AI_TEMP     -> %AI0001     (对应PLC %AI0001)
+AQ_VALVE    -> %AQ0001     (对应PLC %AQ0001)
+
+// 在Cimplicity中配置：
+// Device: PLC_RX3i (SRTP, 192.168.1.10)
+// Point: DI_START, Address: %I00001, Type: BOOLEAN</div></div>
+<div class="warn-box"><span class="warn-label">注意事项</span>
+<ul><li>SRTP通信默认使用<strong>TCP端口18246</strong></li><li>Cimplicity轮询PLC的周期建议设为<strong>500ms-1s</strong>，过快会增加CPU负载</li><li>大量点位（>1000点）时建议使用EGD代替SRTP轮询</li></ul></div>
+</div></div>
+
+<div class="kp-card" id="kp6-2"><div class="kp-title">6.2 EGD生产者/消费者通信 <span class="badge badge-tool">EGD</span></div><div class="kp-content">
+<p><strong>EGD（Ethernet Global Data）</strong>是基于UDP的广播/组播通信，适合<strong>大量数据快速交换</strong>，延迟低于SRTP轮询：</p>
+<h4>EGD工作原理</h4>
+<table><tr><th>角色</th><th>功能</th><th>数量</th></tr>
+<tr><td>Producer（生产者）</td><td>周期性发送数据包</td><td>1个</td></tr>
+<tr><td>Consumer（消费者）</td><td>接收数据包</td><td>多个</td></tr></table>
+<div class="example-box"><span class="ex-label">EGD配置实例</span>
+<p>场景：1台PLC向3台Cimplicity Server发送1000个数据点</p>
+<ol><li><strong>PLC端（Producer）</strong>：在HWC中添加EGD配置，创建一个EGD页面（Page），将1000个点的数据映射到Page的预定义偏移地址</li><li><strong>发送周期</strong>：设为100ms（10次/秒）</li><li><strong>Cimplicity端（Consumer）</strong>：每台Server配置为Consumer，接收同一个Page</li><li><strong>优势</strong>：PLC只发1次数据包，3台Server同时接收，CPU负载极低</li></ol></div>
+<div class="formula-block"><div class="formula-label">EGD数据映射</div><div class="formula">// PLC端EGD Page配置
+// Page ID: 1
+// Producer IP: 192.168.1.10 (PLC)
+// Consumer IP: 192.168.1.20, .30, .40 (3台Server)
+// 发送周期: 100ms
+
+// 数据映射到Page的偏移地址
+// Offset 0:   %R0001-%R0010 (10个INT, 20字节)
+// Offset 20:  %R0101-%R0120 (20个REAL, 80字节)
+// Offset 100: %I0001-%I0016 (16个BOOL, 2字节)
+
+// Cimplicity端读取
+// Point: EGD_TEMP, Address: EGD:Page1:Offset20, Type: REAL</div></div>
+</div></div>
+
+<div class="kp-card" id="kp6-3"><div class="kp-title">6.3 Modbus TCP通信配置 <span class="badge badge-method">Modbus</span></div><div class="kp-content">
+<p>项目经常需要与第三方设备（变频器、仪表、MES系统）通信，Modbus TCP是最通用的选择：</p>
+<h4>RX3i作为Modbus TCP Master</h4>
+<ol><li>在HWC中添加<strong>Modbus TCP Client</strong>模块（或使用CPU自带以太网口）</li><li>使用<strong>COMM_REQ</strong>指令建立连接并发送读写请求</li><li>配置从站IP、端口号（默认502）、Unit ID</li></ol>
+<div class="formula-block"><div class="formula-label">Modbus TCP读取变频器状态（ST）</div><div class="formula">// 通过COMM_REQ发送Modbus请求
+// 读取变频器寄存器40001-40010（运行频率、电流、电压等）
+
+// 1. 建立连接
+COMM_REQ(
+  SYSID := 1,           // CPU系统ID
+  TASK  := 1,           // Modbus通道号
+  FUNC  := 16#03,       // 功能码03-读保持寄存器
+  SLAVE := 1,           // 变频器站号
+  START := 40001,       // 起始寄存器
+  COUNT := 10,          // 读取10个寄存器
+  DATA  := %R500        // 数据存储到%R500-%R509
+);
+
+// 2. 数据解析
+RV_FREQ := INT_TO_REAL(%R500) / 10.0;    // 频率(Hz)
+RV_CURRENT := INT_TO_REAL(%R501) / 100.0; // 电流(A)
+RV_VOLTAGE := INT_TO_REAL(%R502) / 10.0;  // 电压(V)</div></div>
+<h4>RX3i作为Modbus TCP Server</h4>
+<p>当MES或其他系统需要读取PLC数据时，将PLC配置为Server模式。第三方系统通过Modbus功能码03/06/16读写PLC的%R区域。</p>
+<div class="tip-box"><span class="tip-label">Modbus通信调试</span>使用<strong>ModScan</strong>或<strong>Modbus Poll</strong>软件模拟从站/主站，先验证通信链路正常后再接入实际设备。常见问题：字节序（Big-Endian vs Little-Endian）不匹配、寄存器地址偏移1（PLC侧从1开始，Modbus协议从0开始）。</div>
+</div></div>
+
+<div class="kp-card" id="kp6-4"><div class="kp-title">6.4 Profinet远程I/O配置 <span class="badge badge-tool">PNIO</span></div><div class="kp-content">
+<p>当I/O点数超出本地机架容量，或设备分散在不同位置时，使用<strong>Profinet</strong>扩展远程I/O：</p>
+<h4>配置流程</h4>
+<ol><li><strong>CPU侧</strong>：CPE330/CPE400内置Profinet控制器（Controller），ETH2口默认为PNIO口</li><li><strong>远程站</strong>：安装Profinet I/O设备（如Phoenix Contact AXL系列、ETC001等）</li><li><strong>GSDML文件</strong>：将远程I/O设备的GSDML文件导入PME的HWC</li><li><strong>组态</strong>：在HWC中添加Profinet设备，配置模块和地址映射</li><li><strong>设备名称</strong>：每个PNIO设备必须分配唯一的Device Name</li></ol>
+<div class="warn-box"><span class="warn-label">常见问题</span>
+<ul><li>Profinet设备<strong>名称和IP必须在HWC中与实际设备一致</strong>，否则无法建立连接</li><li>首次调试时需要用PME的"Profinet Controller Diagnostics"检查设备是否在线</li><li>Profinet I/O更新周期默认<strong>1ms-4ms</strong>，比SRTP快很多</li><li>不要在Profinet网络上接非PNIO设备（如办公电脑）</li></ul></div>
+</div></div>
+
 </div>
 
-<div class="card">
-<h3>地址规划建议</h3>
-<div class="formula">地址分配原则:
-  实际I/O: %I/%Q/%AI/%AQ 占用模块对应地址
-  通信数据区: EGD/Modbus占用的地址
-  状态诊断: 建议放高地址区(如%R9000+)
-  中间寄存器: %R0001~%R8999
-  符号变量: %W区域
+<!-- ========== 第七章 PID控制回路实现 ========== -->
+<div class="chapter" id="ch7">
+<div class="chapter-header"><span class="ch-tag">第七章</span><h2>PID控制回路实现</h2><div class="ch-desc">PID功能块结构、自动/手动模式切换、参数整定方法、项目应用实例</div></div>
 
-建议做Excel文件规划:
-  | 模块 | 机架.槽位 | 类型 | 起始地址 | 长度 | 状态地址 | 描述 |
-  | CPU  | 0.1       | CPE330| -      | -    | -        | CPU  |
-  | DI1  | 0.2       | MDL655| %I00001| 32点 | %R9001  | 数字输入1 |
-  | DO1  | 0.3       | MDL754| %Q00001| 32点 | %R9002  | 数字输出1 |
-  | AI1  | 0.4       | ALG600| %AI0001| 8通道| %R9003  | 模拟输入1 |</div>
+<div class="kp-card" id="kp7-1"><div class="kp-title">7.1 PID功能块结构与配置 <span class="badge badge-method">PID</span></div><div class="kp-content">
+<p>RX3i内置PID功能块（PID_ISA），使用一个<strong>40字控制块</strong>存储所有PID参数和状态：</p>
+<div class="formula-block"><div class="formula-label">PID控制块内存结构（%R数组）</div><div class="formula">// PID控制块占用连续40个%R寄存器
+// %R0001: 控制字（模式、使能、手动/自动）
+// %R0002: 状态字（报警、饱和等）
+// %R0003: 设定值(SP)
+// %R0004: 过程变量(PV)
+// %R0005: 输出值(CV)
+// %R0006: 比例增益(Kp)
+// %R0007: 积分时间(Ti)
+// %R0008: 微分时间(Td)
+// %R0009: 微分增益(Kd)
+// %R0010: 输出上限
+// %R0011: 输出下限
+// %R0012: 死区
+// %R0013-0020: 报警限值
+// %R0021-0040: 内部状态数据（PID算法使用）</div></div>
+<h4>LD中调用PID</h4>
+<div class="formula-block"><div class="formula-label">PID块调用</div><div class="formula">// 在Program Block中调用PID功能块
+PID_ISA(
+  // 输入
+  SP       := RV_TEMP_SP,     // 设定值
+  PV       := RV_TEMP_PV,     // 过程变量（工程量）
+  CV       => AQ_VALVE_POS,   // 输出到模拟量输出
+  // 参数
+  KP       := 2.5,            // 比例增益
+  TI       := 10.0,           // 积分时间(s)
+  TD       := 2.0,            // 微分时间(s)
+  // 限制
+  CV_HI    := 100.0,          // 输出上限100%
+  CV_LO    := 0.0,            // 输出下限0%
+  // 模式
+  AUTO_MAN := PID_AUTO_MODE,  // TRUE=自动, FALSE=手动
+  MANUAL_CV:= RV_MANUAL_OUT   // 手动输出值
+);</div></div>
+</div></div>
+
+<div class="kp-card" id="kp7-2"><div class="kp-title">7.2 自动/手动无冲击切换 <span class="badge badge-practice">实战</span></div><div class="kp-content">
+<p>项目中最常见的需求：<strong>操作员需要在自动和手动之间切换</strong>，切换时不能产生输出突变（无冲击切换）：</p>
+<div class="formula-block"><div class="formula-label">无冲击切换逻辑</div><div class="formula">// 手动/自动切换逻辑
+IF DI_PID_AUTO_BTN THEN
+  PID_AUTO_MODE := TRUE;
+ELSIF DI_PID_MAN_BTN THEN
+  // 切换到手动前，将当前输出值写入手动输出
+  RV_MANUAL_OUT := RV_PID_CV_CURRENT;
+  PID_AUTO_MODE := FALSE;
+END_IF;
+
+// 手动模式下，操作员通过上位机调整RV_MANUAL_OUT
+// PID块在手动模式下输出=MANUAL_CV，内部积分器跟踪
+// 切回自动时，输出从当前值开始，无突变
+
+// PID调用
+PID_ISA(
+  ...
+  AUTO_MAN := PID_AUTO_MODE,
+  MANUAL_CV:= RV_MANUAL_OUT
+);</div></div>
+<div class="tip-box"><span class="tip-label">关键点</span>PID_ISA块在手动模式下会自动进行<strong>积分跟踪（Tracking）</strong>，确保内部积分器跟踪当前手动输出值。这是内置功能，不需要额外编程。</div>
+</div></div>
+
+<div class="kp-card" id="kp7-3"><div class="kp-title">7.3 PID参数整定方法 <span class="badge badge-method">整定</span></div><div class="kp-content">
+<table><tr><th>方法</th><th>步骤</th><th>适用场景</th></tr>
+<tr><td><strong>经验试凑法</strong></td><td>先P后I再D，逐步加大</td><td>快速调试</td></tr>
+<tr><td><strong>临界比例法</strong></td><td>纯P控制找到临界振荡，计算参数</td><td>温度、压力回路</td></tr>
+<tr><td><strong>阶跃响应法</strong></td><td>给阶跃输入，记录响应曲线</td><td>慢响应过程</td></tr></table>
+<div class="example-box"><span class="ex-label">经验试凑法实操</span>
+<ol><li><strong>置I=0, D=0</strong>，逐步增大Kp直到系统出现等幅振荡，然后减小Kp到振荡消失的60-70%</li><li><strong>逐步减小Ti</strong>（从大往小调），直到出现振荡，然后增大Ti到振荡消失的1.2倍</li><li><strong>逐步增大Td</strong>（从小往大调），直到响应变快但不振荡。温度控制一般Td=Ti的1/4到1/8</li><li><strong>典型参数参考</strong>：流量控制 Kp=0.5-1.5, Ti=0.1-1s；液位控制 Kp=1-5, Ti=1-10s；温度控制 Kp=2-10, Ti=5-60s</li></ol></div>
+</div></div>
+
 </div>
 
-<div class="card">
-<h3>项目备份与版本管理</h3>
-<ul>
-<li><strong>备份</strong>: 右键Project → Back Up → 自动打包zip</li>
-<li><strong>恢复</strong>: 右键Project → Restore → 选择zip文件</li>
-<li><strong>跨ME拷贝</strong>: 运行多个ME实例，可跨工程复制粘贴</li>
-<li><strong>模板</strong>: 将常用配置设为默认模板</li>
-<li><strong>版本建议</strong>: 每次修改后备份，文件名含日期版本号</li>
-</ul>
+<!-- ========== 第八章 Cimplicity上位机集成 ========== -->
+<div class="chapter" id="ch8">
+<div class="chapter-header"><span class="ch-tag">第八章</span><h2>Cimplicity上位机集成</h2><div class="ch-desc">工程结构、设备连接、点位配置、画面开发、报警系统、趋势图</div></div>
+
+<div class="kp-card" id="kp8-1"><div class="kp-title">8.1 Cimplicity工程结构与设备连接 <span class="badge badge-concept">架构</span></div><div class="kp-content">
+<p>Cimplicity SCADA的工程结构：</p>
+<div class="formula-block"><div class="formula-label">Cimplicity工程结构</div><div class="formula">Cimplicity Project
+  ├─ Devices（设备）
+  │   ├─ PLC_RX3i_Main (SRTP, 192.168.1.10)
+  │   ├─ PLC_RX3i_Aux  (SRTP, 192.168.1.11)
+  │   └─ VFD_Modbus    (Modbus TCP, 192.168.1.50)
+  ├─ Points（点位数据库）
+  │   ├─ DI_xxx (数字输入)
+  │   ├─ DO_xxx (数字输出)
+  │   ├─ AI_xxx (模拟输入)
+  │   └─ RV_xxx (寄存器变量)
+  ├─ Screens（画面）
+  │   ├─ Main_Overview.cim (主画面)
+  │   ├─ Process_Detail.cim (工艺详细)
+  │   └─ Alarm_List.cim (报警列表)
+  ├─ Alarms（报警配置）
+  ├─ Trends（趋势图配置）
+  └─ Scripts（脚本）</div></div>
+<h4>设备连接配置</h4>
+<ol><li>在Cimplicity Project中新建Device，选择GE SRTP驱动</li><li>填入PLC的IP地址、端口号(18246)</li><li>测试连接成功后，开始配置点位</li></ol>
+</div></div>
+
+<div class="kp-card" id="kp8-2"><div class="kp-title">8.2 点位配置与地址映射 <span class="badge badge-method">点位</span></div><div class="kp-content">
+<p>每个PLC变量都需要在Cimplicity中创建对应的Point：</p>
+<table><tr><th>Cimplicity Point ID</th><th>Address</th><th>Type</th><th>说明</th></tr>
+<tr><td>DI_START_CMD</td><td>%I00001</td><td>BOOLEAN</td><td>启动按钮</td></tr>
+<tr><td>DO_MOTOR_RUN</td><td>%Q00001</td><td>BOOLEAN</td><td>电机运行</td></tr>
+<tr><td>AI_TEMP_RAW</td><td>%AI0001</td><td>WORD</td><td>温度原始值</td></tr>
+<tr><td>RV_TEMP_PV</td><td>%R00001</td><td>REAL</td><td>温度工程量(占2个%R)</td></tr>
+<tr><td>RV_PID_SP</td><td>%R00020</td><td>REAL</td><td>PID设定值</td></tr>
+<tr><td>IV_SYS_STATE</td><td>%R00010</td><td>INT</td><td>系统状态码</td></tr></table>
+<div class="warn-box"><span class="warn-label">注意</span>REAL类型占<strong>2个%R寄存器</strong>（32位）。如果%R00001是REAL，那么下一个可用地址是%R00003，不是%R00002！地址规划时务必留足空间。</div>
+<div class="tip-box"><span class="tip-label">点位优化</span>
+<ul><li>只配置<strong>上位机需要显示和操作的点位</strong>，内部中间变量不需要配置</li><li>批量导入：可以用Excel编辑点位表，通过CimEdit的Import功能批量导入</li><li>点位扫描周期：关键信号250ms，普通信号1s，趋势数据500ms</li></ul></div>
+</div></div>
+
+<div class="kp-card" id="kp8-3"><div class="kp-title">8.3 画面开发与交互 <span class="badge badge-practice">画面</span></div><div class="kp-content">
+<h4>典型画面结构</h4>
+<table><tr><th>画面</th><th>功能</th><th>主要元素</th></tr>
+<tr><td>主画面</td><td>工艺流程总览</td><td>设备图标、状态颜色、关键参数</td></tr>
+<tr><td>工艺详细</td><td>单段设备控制</td><td>启停按钮、参数设定、仪表盘</td></tr>
+<tr><td>报警列表</td><td>实时和历史报警</td><td>报警表格、确认按钮</td></tr>
+<tr><td>趋势图</td><td>参数历史曲线</td><td>实时/历史趋势、多笔曲线</td></tr>
+<tr><td>配方管理</td><td>产品配方</td><td>配方表、加载/保存按钮</td></tr></table>
+<h4>画面动态效果</h4>
+<ul><li><strong>颜色绑定</strong>：电机运行时绿色，停止时灰色，故障时红色闪烁</li><li><strong>动画</strong>：管道流动动画（根据流量值显示流动方向和速度）</li><li><strong>按钮操作</strong>：点击按钮→写入PLC→PLC响应→画面状态更新</li><li><strong>弹出窗口</strong>：点击设备图标弹出参数设置面板</li></ul>
+<div class="example-box"><span class="ex-label">按钮写入PLC的实现</span>
+<p>在CimEdit中，按钮的"Mouse Up"事件中配置脚本：</p>
+<div class="formula-block"><div class="formula">// Cimplicity脚本（Basic语法）
+Sub BtnStart_OnMouseUp()
+  ' 写入启动命令到PLC
+  PointSet "DO_START_CMD", 1
+  ' 延时500ms后自动复位
+  Wait 0.5
+  PointSet "DO_START_CMD", 0
+End Sub</div></div>
+</div></div>
+
+<div class="kp-card" id="kp8-4"><div class="kp-title">8.4 报警系统配置 <span class="badge badge-method">报警</span></div><div class="kp-content">
+<p>Cimplicity有完整的报警管理系统：</p>
+<h4>报警配置要素</h4>
+<table><tr><th>属性</th><th>说明</th><th>示例</th></tr>
+<tr><td>Point ID</td><td>触发报警的点位</td><td>RV_TEMP_PV</td></tr>
+<tr><td>条件</td><td>触发条件</td><td>> 85.0 (高高限)</td></tr>
+<tr><td>级别</td><td>严重程度</td><td>1-4级（1最高）</td></tr>
+<tr><td>描述</td><td>报警描述文字</td><td>反应釜温度高高报警</td></tr>
+<tr><td>动作</td><td>触发时执行</td><td>弹窗、声音、写PLC</td></tr>
+<tr><td>确认</td><td>是否需要操作员确认</td><td>1-2级必须确认</td></tr></table>
+<div class="tip-box"><span class="tip-label">报警分级建议</span>
+<ul><li><strong>1级（紧急）</strong>：急停、安全联锁触发 → 声光报警+停机+必须确认</li><li><strong>2级（严重）</strong>：设备故障、参数越限 → 弹窗+必须确认</li><li><strong>3级（警告）</strong>：参数接近限值 → 黄色提示</li><li><strong>4级（信息）</strong>：状态变化通知 → 仅记录</li></ul></div>
+</div></div>
+
 </div>
 
-<div class="card">
-<h3>常见故障排查表</h3>
-<table>
-<tr><th>现象</th><th>可能原因</th><th>排查方法</th></tr>
-<tr><td>CPU无法连接</td><td>IP错误/网络不通/杀毒软件/SRTP未使能</td><td>ping IP → 检查HWC → 关杀毒 → 串口连机</td></tr>
-<tr><td>I/O模块红灯</td><td>接线错误/模块故障/背板接触</td><td>查%S0010 → 看I/O故障表 → 重新插拔</td></tr>
-<tr><td>程序无法下载</td><td>CPU在RUN/密码保护/Flash冲突</td><td>切到STOP → 检查权限 → 清Flash</td></tr>
-<tr><td>扫描超时</td><td>程序过大/死循环/通信负载高</td><td>查CPU诊断 → 优化程序 → 调通信窗口</td></tr>
-<tr><td>电池报警</td><td>电池电量低/未装电池</td><td>更换IC695ACC414电池</td></tr>
-<tr><td>配置不符</td><td>硬件配置与实际不一致</td><td>对比HWC与实际硬件 → 重新配置下载</td></tr>
-<tr><td>EGD通信失败</td><td>Producer/Consumer配置不匹配</td><td>检查数据类型长度 → 检查IP/Exchange ID</td></tr>
-<tr><td>PNS IO站掉线</td><td>设备名错误/网络中断/环网断开</td><td>检查设备名 → 检查网络 → Discovery Tool</td></tr>
-</table>
+<!-- ========== 第九章 中断与系统功能应用 ========== -->
+<div class="chapter" id="ch9">
+<div class="chapter-header"><span class="ch-tag">第九章</span><h2>中断与系统功能应用</h2><div class="ch-desc">时间中断配置、系统状态变量应用、项目中的特殊功能实现</div></div>
+
+<div class="kp-card" id="kp9-1"><div class="kp-title">9.1 系统状态变量应用 <span class="badge badge-tool">系统</span></div><div class="kp-content">
+<p>%S系列系统变量在项目中有大量实际用途：</p>
+<table><tr><th>变量</th><th>功能</th><th>项目应用</th></tr>
+<tr><td><strong>%S0001</strong></td><td>首次扫描脉冲(1→0)</td><td>上电初始化、变量清零</td></tr>
+<tr><td><strong>%S0002</strong></td><td>1Hz时钟脉冲</td><td>1秒计时、闪烁指示灯</td></tr>
+<tr><td><strong>%S0003</strong></td><td>1/8Hz时钟(125ms)</td><td>快速闪烁、高速采样</td></tr>
+<tr><td><strong>%S0004</strong></td><td>1/4Hz时钟(250ms)</td><td>中速闪烁</td></tr>
+<tr><td><strong>%S0005</strong></td><td>1/2Hz时钟(500ms)</td><td>慢速闪烁</td></tr>
+<tr><td><strong>%S0009</strong></td><td>10ms时钟</td><td>高速计时基准</td></tr>
+<tr><td><strong>%S0011</strong></td><td>25ms时钟</td><td>中等精度计时</td></tr>
+<tr><td><strong>%S0013</strong></td><td>100ms时钟</td><td>100ms定时任务</td></tr>
+<tr><td><strong>%SA0013</strong></td><td>看门狗超时标志</td><td>检测程序超时</td></tr>
+<tr><td><strong>%SA0012</strong></td><td>PLC故障状态</td><td>检测硬件故障</td></tr></table>
+<div class="example-box"><span class="ex-label">实际应用</span>
+<div class="formula-block"><div class="formula">// 1. 首次扫描初始化
+IF %S0001 THEN
+  IV_SYS_STATE := 0;        // 进入初始化状态
+  RV_TEMP_SP := 60.0;       // 温度默认设定值
+  IV_RECIPE_NO := 1;        // 默认配方号
+END_IF;
+
+// 2. 闪烁指示灯（运行灯慢闪，故障灯快闪）
+DO_RUN_LED := IV_SYS_STATE = 20 AND %S0005;  // 运行时500ms闪
+DO_FAULT_LED := ANY_FAULT AND %S0003;        // 故障时125ms快闪
+
+// 3. 1秒定时任务（运行时间累计）
+IF %S0002 AND IV_SYS_STATE = 20 THEN
+  IV_RUN_TIME_TOTAL := IV_RUN_TIME_TOTAL + 1;
+END_IF;
+
+// 4. 100ms任务（通信心跳）
+IF %S0013 THEN
+  HEARTBEAT_COUNTER := HEARTBEAT_COUNTER + 1;
+  IF HEARTBEAT_COUNTER > 50 THEN  // 5秒无响应
+    COMM_TIMEOUT := TRUE;
+  END_IF;
+END_IF;</div></div>
+</div></div>
+
+<div class="kp-card" id="kp9-2"><div class="kp-title">9.2 时间中断与定时任务 <span class="badge badge-method">中断</span></div><div class="kp-content">
+<p>对于需要精确定时的任务（如高速采样、精确控制），使用时间中断：</p>
+<h4>中断块配置</h4>
+<ol><li>在HWC的CPU Settings中配置<strong>Timed Interrupt</strong></li><li>设置触发周期（1ms-65535ms）</li><li>创建Interrupt Block并关联到对应的中断号</li></ol>
+<div class="formula-block"><div class="formula-label">中断块配置示例</div><div class="formula">// 中断块 #1: 每10ms执行一次
+// 用途：高速数据采集和滤波
+
+// 模拟量滤波（移动平均）
+IV_FILTER_INDEX := (IV_FILTER_INDEX + 1) MOD 10;
+RV_FILTER_BUF[IV_FILTER_INDEX] := RV_TEMP_PV_RAW;
+
+// 计算平均值
+RV_TEMP_SUM := 0.0;
+FOR IV_J := 0 TO 9 DO
+  RV_TEMP_SUM := RV_TEMP_SUM + RV_FILTER_BUF[IV_J];
+END_FOR;
+RV_TEMP_PV := RV_TEMP_SUM / 10.0;
+
+// 中断块执行时间必须远小于触发周期
+// 10ms中断块，执行时间应<2ms</div></div>
+<div class="warn-box"><span class="warn-label">中断使用注意</span>
+<ul><li>中断块中<strong>不要调用通信指令</strong>（COMM_REQ/SVC_REQ），可能造成死锁</li><li>中断块执行时间必须远小于触发周期，否则会导致扫描周期溢出</li><li>中断块中的变量修改可能与主程序产生<strong>竞争条件</strong>，需要使用中间变量缓冲</li></ul></div>
+</div></div>
+
 </div>
 
-<div class="card">
-<h3>常用手册文档编号</h3>
-<table>
-<tr><th>编号</th><th>名称</th></tr>
-<tr><td>GFK-2314</td><td>PACSystems RX3i系统手册(中文)</td></tr>
-<tr><td>GFK-2950</td><td>RX3i & RSTi-EP CPU参考手册</td></tr>
-<tr><td>GFK-2224</td><td>TCP/IP以太网通信手册</td></tr>
-<tr><td>GFK-2222</td><td>PAC通信与诊断</td></tr>
-<tr><td>GFK-0467</td><td>90-30/20/Micro指令集参考手册</td></tr>
-<tr><td>GFK-1866</td><td>Logic Developer编程指南</td></tr>
-<tr><td>GFK-1603</td><td>Cimplicity用户指南</td></tr>
-</table>
+<!-- ========== 第十章 故障处理与调试投运 ========== -->
+<div class="chapter" id="ch10">
+<div class="chapter-header"><span class="ch-tag">第十章</span><h2>故障处理与调试投运</h2><div class="ch-desc">故障表与故障处理、可配置故障动作、调试流程、常见问题排查</div></div>
+
+<div class="kp-card" id="kp10-1"><div class="kp-title">10.1 PLC故障表与处理机制 <span class="badge badge-concept">故障</span></div><div class="kp-content">
+<p>RX3i有两套故障表：<strong>PLC故障表</strong>和<strong>I/O故障表</strong>：</p>
+<table><tr><th>故障表</th><th>记录内容</th><th>查看方式</th></tr>
+<tr><td>PLC故障表</td><td>CPU级故障（看门狗、内存、程序）</td><td>PME在线 → Controller → Fault Table</td></tr>
+<tr><td>I/O故障表</td><td>模块级故障（模块丢失、短路、断线）</td><td>PME在线 → Hardware → I/O Fault</td></tr></table>
+<h4>故障等级与默认动作</h4>
+<table><tr><th>等级</th><th>说明</th><th>默认动作</th></tr>
+<tr><td><strong>Fatal（致命）</strong></td><td>CPU停止运行</td><td>所有输出清零</td></tr>
+<tr><td><strong>Diagnostic（诊断）</strong></td><td>记录但不停止</td><td>仅记录到故障表</td></tr>
+<tr><td><strong>Warning（警告）</strong></td><td>提示性故障</td><td>仅记录</td></tr></table>
+</div></div>
+
+<div class="kp-card" id="kp10-2"><div class="kp-title">10.2 可配置故障动作 <span class="badge badge-method">配置</span></div><div class="kp-content">
+<p>在HWC的CPU Settings → Faults页面，可以为每种故障配置不同的响应动作：</p>
+<table><tr><th>故障类型</th><th>可配置动作</th><th>推荐配置</th></tr>
+<tr><td>模块丢失</td><td>记录/停止/继续</td><td>记录+停止（防止失控）</td></tr>
+<tr><td>模块添加</td><td>记录/忽略</td><td>记录（防止误插模块）</td></tr>
+<tr><td>外部回路短路</td><td>记录/禁用通道</td><td>禁用通道（保护模块）</td></tr>
+<tr><td>外部回路断线</td><td>记录/禁用通道</td><td>记录（根据工艺决定）</td></tr>
+<tr><td>看门狗超时</td><td>致命/诊断</td><td>致命（程序有严重问题）</td></tr></table>
+<div class="tip-box"><span class="tip-label">配置建议</span>对于关键设备控制回路，建议将I/O故障配置为<strong>停止PLC运行</strong>，防止因I/O故障导致设备失控。对于非关键回路，可以配置为仅记录，保持系统运行。</div>
+</div></div>
+
+<div class="kp-card" id="kp10-3"><div class="kp-title">10.3 用户自定义故障 <span class="badge badge-practice">实战</span></div><div class="kp-content">
+<p>除了系统硬件故障，项目还需要处理<strong>工艺故障</strong>（温度超限、液位异常等）。使用SVC_REQ #21写入自定义故障：</p>
+<div class="formula-block"><div class="formula-label">用户故障定义表</div><div class="formula">// 项目自定义故障码定义
+// 1001: 温度高高报警
+// 1002: 温度低低报警  
+// 1003: 液位高高报警
+// 1004: 液位低低报警
+// 1005: 电机过载
+// 1006: 阀门超时
+// 1007: 通信超时
+// 1008: PID偏差过大
+
+// 写入故障示例
+IF RV_TEMP_PV > RV_TEMP_HH THEN
+  SVC_REQ(21, FAULT_CODE := 1001, 
+          MSG := '温度高高', ACTION := 2);
+  // ACTION: 1=仅记录, 2=停止PLC
+END_IF;
+
+// 故障复位
+IF DI_FAULT_RESET THEN
+  // 清除所有用户故障
+  SVC_REQ(21, FAULT_CODE := 0, ACTION := 0);
+END_IF;</div></div>
+</div></div>
+
+<div class="kp-card" id="kp10-4"><div class="kp-title">10.4 调试流程与常见问题排查 <span class="badge badge-practice">调试</span></div><div class="kp-content">
+<h4>项目调试标准流程</h4>
+<table><tr><th>阶段</th><th>内容</th><th>注意事项</th></tr>
+<tr><td>1. 硬件检查</td><td>检查接线、电源、模块安装</td><td>I/O模块指示灯、电源电压</td></tr>
+<tr><td>2. 通信测试</td><td>建立PME与CPU连接</td><td>IP设置、ping测试</td></tr>
+<tr><td>3. 硬件组态下载</td><td>下载HWC配置</td><td>检查模块识别是否正确</td></tr>
+<tr><td>4. I/O点检</td><td>逐点验证输入输出</td><td>强制输出、观察指示灯</td></tr>
+<tr><td>5. 空载程序测试</td><td>下载程序，不带负载运行</td><td>观察逻辑、定时器、状态机</td></tr>
+<tr><td>6. 单设备调试</td><td>逐台设备带载调试</td><td>电机转向、阀门动作</td></tr>
+<tr><td>7. 联动调试</td><td>全工艺流程联调</td><td>联锁逻辑、顺序控制</td></tr>
+<tr><td>8. 上位机调试</td><td>Cimplicity画面、报警、趋势</td><td>点位映射、操作响应</td></tr>
+<tr><td>9. 验收测试</td><td>72小时连续运行</td><td>稳定性、故障恢复</td></tr></table>
+<h4>第一次连机常见问题</h4>
+<div class="warn-box"><span class="warn-label">问题排查表</span>
+<table><tr><th>问题</th><th>可能原因</th><th>解决方法</th></tr>
+<tr><td>PME连不上CPU</td><td>IP不在同一网段</td><td>设置电脑IP为192.168.1.x</td></tr>
+<tr><td>连上但不能下载</td><td>CPU在运行模式且有密码</td><td>停止CPU→清除密码→下载</td></tr>
+<tr><td>下载后模块报错</td><td>HWC与实际模块不匹配</td><td>检查模块型号和插槽位置</td></tr>
+<tr><td>I/O不响应</td><td>地址映射错误</td><td>检查%I/%Q起始地址与模块槽位</td></tr>
+<tr><td>Cimplicity读不到数据</td><td>点位地址格式错误</td><td>检查%R地址和数据类型</td></tr>
+<tr><td>扫描周期过长</td><td>程序量大或浮点运算多</td><td>使用Scan Sets分时执行</td></tr>
+<tr><td>PID输出不稳定</td><td>参数未整定或PV有噪声</td><td>加大滤波、减小Kp</td></tr></table>
 </div>
+</div></div>
+
+<div class="kp-card" id="kp10-5"><div class="kp-title">10.5 项目地址规划模板 <span class="badge badge-tool">规划</span></div><div class="kp-content">
+<p>建议在项目开始前用Excel做好地址规划，避免冲突：</p>
+<table><tr><th>地址范围</th><th>用途</th><th>大小</th></tr>
+<tr><td>%I00001-%I00128</td><td>本地DI信号</td><td>128点</td></tr>
+<tr><td>%I00129-%I00256</td><td>远程DI信号</td><td>128点</td></tr>
+<tr><td>%Q00001-%Q00128</td><td>本地DO信号</td><td>128点</td></tr>
+<tr><td>%Q00129-%Q00256</td><td>远程DO信号</td><td>128点</td></tr>
+<tr><td>%AI0001-%AI0064</td><td>模拟量输入</td><td>64通道</td></tr>
+<tr><td>%AQ0001-%AQ0032</td><td>模拟量输出</td><td>32通道</td></tr>
+<tr><td>%R00001-%R00999</td><td>系统与状态变量</td><td>1000字</td></tr>
+<tr><td>%R01000-%R01999</td><td>PID参数区</td><td>1000字(25个PID)</td></tr>
+<tr><td>%R02000-%R03999</td><td>配方数据区</td><td>2000字</td></tr>
+<tr><td>%R04000-%R05999</td><td>通信数据区</td><td>2000字</td></tr>
+<tr><td>%R06000-%R09999</td><td>报警与日志区</td><td>4000字</td></tr>
+<tr><td>%W00001-%W05000</td><td>浮点数据区</td><td>5000字</td></tr>
+<tr><td>%W05001-%W09999</td><td>扩展数据区</td><td>5000字</td></tr></table>
+<div class="tip-box"><span class="tip-label">规划原则</span>
+<ul><li>按功能分区，留足扩展空间</li><li>每个PID回路预留40个%R字</li><li>配方区按最大配方数x每个配方字数规划</li><li>浮点数据用%W区（DINT/REAL原生32位存储）</li><li>做好文档：每个地址对应什么变量、什么功能</li></ul></div>
+</div></div>
+
 </div>
 
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
 <script>
-function go(e,id){
-  e.preventDefault();
-  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active')});
-  e.target.classList.add('active');
-  window.scrollTo(0,0);
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+function showChapter(n){
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('ch'+n).classList.add('active');
+  document.querySelectorAll('.nav-item')[n-1].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+  }
+}
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('backTop');
+  if(window.scrollY>400)btn.classList.add('show');else btn.classList.remove('show');
+});
+function searchKP(){
+  var q=document.getElementById('searchInput').value.toLowerCase();
+  if(!q)return;
+  var cards=document.querySelectorAll('.kp-card');
+  cards.forEach(function(card){
+    var text=card.textContent.toLowerCase();
+    if(text.indexOf(q)>=0){
+      card.style.display='';
+      var ch=card.closest('.chapter');
+      if(ch)ch.classList.add('active');
+    }else{
+      card.style.display='none';
+    }
+  });
 }
 </script>
 </body>
