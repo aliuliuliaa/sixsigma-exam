@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RX3i指南">
+<title>RX3i 学习指南</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.7;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+.header{text-align:center;padding:24px 0 16px;position:sticky;top:0;background:#0d1117;z-index:100;border-bottom:1px solid #21262d}
+.header h1{font-size:22px;color:#58a6ff}
+.header p{font-size:13px;color:#6e7681;margin-top:4px}
+.back-link{display:inline-block;color:#58a6ff;font-size:14px;text-decoration:none;margin-bottom:12px}
+.phase{background:#161b22;border:1px solid #21262d;border-radius:16px;padding:20px 16px;margin-bottom:16px}
+.phase-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.phase-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.phase-title{font-size:16px;font-weight:600;color:#f0f6fc}
+.phase-body{font-size:14px;color:#8b949e}
+.phase-body ul{padding-left:18px;margin:8px 0}
+.phase-body li{margin-bottom:6px}
+.phase-body strong{color:#c9d1d9}
+.check-list{margin-top:10px}
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:14px;color:#8b949e}
+.check-box{width:18px;height:18px;border:2px solid #30363d;border-radius:4px;flex-shrink:0;margin-top:2px;cursor:pointer}
+.check-box.done{background:#2ecc71;border-color:#2ecc71}
+.check-box.done::after{content:"✓";color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;height:100%}
+.check-text.done{text-decoration:line-through;color:#6e7681}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-right:4px}
+.tag-p1{background:rgba(46,204,113,.15);color:#2ecc71}
+.tag-p2{background:rgba(59,130,246,.15);color:#60a5fa}
+.tag-p3{background:rgba(168,85,247,.15);color:#c084fc}
+.tag-p4{background:rgba(245,158,11,.15);color:#fbbf24}
+.note{background:rgba(31,110,235,.08);border:1px solid rgba(31,110,235,.2);border-radius:8px;padding:12px;margin:8px 0;font-size:13px;color:#8b949e}
+.note::before{content:"💡 ";font-size:14px}
+.warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:12px;margin:8px 0;font-size:13px;color:#f87171}
+.warn::before{content:"⚠️ ";font-size:14px}
+.resource{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:16px;margin-bottom:12px}
+.resource h3{font-size:15px;color:#f0f6fc;margin-bottom:8px}
+.resource ul{padding-left:18px}
+.resource li{font-size:13px;color:#8b949e;margin-bottom:4px}
+.resource a{color:#58a6ff;text-decoration:none}
+.section-title{font-size:18px;color:#58a6ff;font-weight:600;margin:24px 0 12px;padding-bottom:8px;border-bottom:1px solid #21262d}
+</style>
+</head>
+<body>
+<div class="header">
+<a href="rx3i.html" class="back-link">‹ 返回</a>
+<h1>RX3i 学习指南</h1>
+<p>PACSystems RX3i · PME · Cimplicity</p>
+</div>
+
+<div class="section-title">学习路线图</div>
+
+<div class="phase">
+<div class="phase-header">
+<div class="phase-num" style="background:rgba(46,204,113,.2);color:#2ecc71">1</div>
+<div class="phase-title"><span class="tag tag-p1">入门</span> 硬件基础（1-2周）</div>
+</div>
+<div class="phase-body">
+<ul>
+<li><strong>了解 PACSystems 家族</strong>：RX3i/RX7i/RSTi-EP 的区别和定位</li>
+<li><strong>掌握背板系统</strong>：通用背板 vs 串行扩展背板，PCI 双总线概念</li>
+<li><strong>认识 CPU 型号</strong>：CPE305/310/330/400 的性能差异和选型</li>
+<li><strong>学习电源选型</strong>：功率计算，冗余电源配置</li>
+<li><strong>了解 I/O 模块</strong>：DI/DO/AI/AO/HSC 模块的型号和接线</li>
+<li><strong>硬件安装</strong>：背板组装、模块安装、接线规范</li>
+</ul>
+<div class="note">目标：能看懂硬件清单，理解系统架构图，知道每个模块是干什么的。</div>
+<div class="check-list">
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">了解 PACSystems 家族产品线</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">掌握通用背板和串行背板的区别</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">能区分各 CPU 型号的性能参数</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">了解常用 I/O 模块型号和接线方式</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">理解电源功率计算和选型</span></div>
+</div>
+</div>
+</div>
+
+<div class="phase">
+<div class="phase-header">
+<div class="phase-num" style="background:rgba(59,130,246,.2);color:#60a5fa">2</div>
+<div class="phase-title"><span class="tag tag-p2">进阶</span> PME 编程（2-4周）</div>
+</div>
+<div class="phase-body">
+<ul>
+<li><strong>安装 PME</strong>：软件安装、授权、界面认识</li>
+<li><strong>新建项目</strong>：选择 Target（RX3i CPU）、硬件配置</li>
+<li><strong>梯形图编程 (LD)</strong>：触点、线圈、定时器、数学指令、跳转/调用</li>
+<li><strong>结构化文本 (ST)</strong>：IF/CASE/FOR/WHILE 语句、函数定义</li>
+<li><strong>变量管理</strong>：变量声明、地址映射、断电保持设置</li>
+<li><strong>子程序和函数块</strong>：模块化编程思想</li>
+<li><strong>在线调试</strong>：下载/上传、监控、强制、断点</li>
+<li><strong>系统变量 %S</strong>：常用系统状态变量的应用</li>
+</ul>
+<div class="note">建议边学边练：在 PME 仿真器中搭建一个简单项目（如电机启停控制），逐步增加功能。</div>
+<div class="warn">如果没有实际 PLC，可以安装 PME 的仿真功能进行离线调试。</div>
+<div class="check-list">
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">能独立新建项目和配置硬件</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">掌握梯形图基本指令</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">能用 ST 编写数据处理逻辑</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">掌握子程序调用和参数传递</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">能使用在线调试功能（监控/强制/断点）</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">完成一个综合练习项目（如水箱液位控制）</span></div>
+</div>
+</div>
+</div>
+
+<div class="phase">
+<div class="phase-header">
+<div class="phase-num" style="background:rgba(168,85,247,.2);color:#c084fc">3</div>
+<div class="phase-title"><span class="tag tag-p3">高级</span> 通信网络（1-2周）</div>
+</div>
+<div class="phase-body">
+<ul>
+<li><strong>Ethernet 基础</strong>：IP 地址配置、Ping 测试</li>
+<li><strong>SRTP 通信</strong>：PME 与 CPU 连接、CPU 间数据交换</li>
+<li><strong>Modbus TCP</strong>：主站/从站配置、地址映射</li>
+<li><strong>EGD 广播</strong>：多 PLC 间数据共享配置</li>
+<li><strong>OPC UA</strong>：Server 配置、安全设置、与上位机连接</li>
+<li><strong>PROFINET</strong>：PNC001 模块配置、IO 设备连接（可选）</li>
+</ul>
+<div class="note">通信是实际工程中的重点和难点，建议至少精通 SRTP 和 Modbus TCP 两种。</div>
+<div class="check-list">
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">配置 CPU 以太网口 IP 和通信参数</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">通过 PME 远程连接 CPU 下载/调试程序</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">配置 Modbus TCP 从站并测试通信</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">了解 EGD 广播通信的配置方法</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">配置 OPC UA Server 并连接客户端测试</span></div>
+</div>
+</div>
+</div>
+
+<div class="phase">
+<div class="phase-header">
+<div class="phase-num" style="background:rgba(245,158,11,.2);color:#fbbf24">4</div>
+<div class="phase-title"><span class="tag tag-p4">应用</span> Cimplicity 上位机（2-3周）</div>
+</div>
+<div class="phase-body">
+<ul>
+<li><strong>软件安装</strong>：Cimplicity 安装、授权</li>
+<li><strong>新建工程</strong>：创建项目、配置设备（连接 PLC）</li>
+<li><strong>点位配置</strong>：新建 Point、地址映射、采集周期</li>
+<li><strong>画面开发</strong>：CimEdit 画图、动画绑定、脚本编写</li>
+<li><strong>报警配置</strong>：报警分类、报警级别、报警消息</li>
+<li><strong>趋势图</strong>：实时趋势、历史趋势配置</li>
+<li><strong>用户管理</strong>：权限分级、登录验证</li>
+<li><strong>项目部署</strong>：工程发布、运行测试</li>
+</ul>
+<div class="note">Cimplicity 的学习重点是画面开发 + 点位配置 + 报警系统，这三项覆盖了 80% 的日常使用场景。</div>
+<div class="check-list">
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">安装 Cimplicity 并新建工程</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">配置 PLC 设备连接（SRTP）</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">批量配置点位并验证数据采集</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">开发一个完整的监控画面（含动画+脚本）</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">配置报警系统并测试</span></div>
+<div class="check-item"><span class="check-box" onclick="this.classList.toggle('done');this.nextElementSibling.classList.toggle('done')"></span><span class="check-text">配置趋势图（实时+历史）</span></div>
+</div>
+</div>
+</div>
+
+<div class="section-title">练习项目建议</div>
+
+<div class="resource">
+<h3>练习 1：电机启停控制（入门）</h3>
+<ul>
+<li>硬件：1个 DI（启动按钮）、1个 DI（停止按钮）、1个 DO（电机接触器）</li>
+<li>程序：自锁电路 + 过载保护 + 运行指示</li>
+<li>上位机：启停按钮 + 运行指示灯 + 故障报警</li>
+</ul>
+</div>
+
+<div class="resource">
+<h3>练习 2：水箱液位控制（进阶）</h3>
+<ul>
+<li>硬件：1个 AI（液位变送器）、1个 AO（调节阀）、1个 DI（进料泵）</li>
+<li>程序：PID 闭环控制（用 ST 写 PID 逻辑或用功能块）</li>
+<li>上位机：液位棒图 + 阀位显示 + 趋势曲线 + 高低限报警</li>
+</ul>
+</div>
+
+<div class="resource">
+<h3>练习 3：多设备通信（高级）</h3>
+<ul>
+<li>两台 RX3i 通过 SRTP 交换数据</li>
+<li>一台 RX3i 通过 Modbus TCP 读取第三方设备</li>
+<li>OPC UA 客户端读取 RX3i 数据</li>
+<li>Cimplicity 同时采集两台 PLC 数据</li>
+</ul>
+</div>
+
+<div class="section-title">学习资源</div>
+
+<div class="resource">
+<h3>📖 官方手册（必读）</h3>
+<ul>
+<li><strong>GFK-2314</strong> - PACSystems RX3i 系统手册（中文版可搜到）</li>
+<li><strong>GFK-2950</strong> - RX3i & RSTi-EP CPU 参考手册</li>
+<li><strong>GFK-2224</strong> - TCP/IP 以太网通信手册</li>
+<li>PME 快速入门手册（中文版）</li>
+</ul>
+</div>
+
+<div class="resource">
+<h3>🌐 在线资源</h3>
+<ul>
+<li><a href="https://www.emerson.com/en-us/automation-solutions/control-safety-systems/control-systems/pacsystems">Emerson PACSystems 官方页面</a></li>
+<li><a href="https://www.emerson.com/en-us/automation-solutions/control-safety-systems/control-systems/cimplicity">Cimplicity SCADA 官方页面</a></li>
+<li><a href="https://chinakong.com/download/list.asp?classid=2&clas=17&owner=2&subid=9">中国工控网 PACSystems 手册下载</a></li>
+<li>CSDN 搜索"PACSystems RX3i"有大量中文教程</li>
+<li>Emerson Exchange 365 社区论坛</li>
+</ul>
+</div>
+
+<div class="resource">
+<h3>🎬 视频教程</h3>
+<ul>
+<li>B站搜索"GE RX3i"或"PME 编程"</li>
+<li>YouTube 搜索"PACSystems RX3i tutorial"</li>
+<li>Emerson 官方 YouTube 频道</li>
+</ul>
+</div>
+
+<div class="resource">
+<h3>🛠️ 软件获取</h3>
+<ul>
+<li>PME：联系 Emerson 或当地代理商获取试用版</li>
+<li>Cimplicity：有 Developer 版和运行版，需分别授权</li>
+<li>仿真：PME 自带仿真器，无需硬件即可调试程序逻辑</li>
+</ul>
+</div>
+
+<div class="section-title">重点知识速记</div>
+
+<div class="resource">
+<h3>⭐ 必记知识点</h3>
+<ul>
+<li><strong>内存区域</strong>：%I(输入) %Q(输出) %M(内部) %AI(模拟入) %AQ(模拟出) %R(寄存器) %T(定时器) %S(系统)</li>
+<li><strong>五种语言</strong>：LD(梯形图) ST(结构化文本) FBD(功能块) IL(指令表) SFC(顺序图)</li>
+<li><strong>CPU 模式</strong>：STOP / RUN / RUN-IO-Disabled / STOP-IO-Enabled</li>
+<li><strong>通信协议</strong>：SRTP(私有) Modbus TCP(标准) EGD(广播) OPC UA(未来趋势)</li>
+<li><strong>背板总线</strong>：PCI(高速 IC695) + 串行(IC694) 双总线可混用</li>
+<li><strong>首次扫描</strong>：%S0034 仅第一个扫描周期为 ON，用于初始化</li>
+<li><strong>1秒脉冲</strong>：%S0005 用于闪烁指示灯和定时</li>
+</ul>
+</div>
+
+<div class="resource">
+<h3>⭐ 常见面试/考试题</h3>
+<ul>
+<li>Q: PAC 和 PLC 的区别？<br>A: PAC 融合了 PLC 的确定性控制、DCS 的系统管理、PC 的开放性，支持多种编程语言和标准通信协议。</li>
+<li>Q: RX3i 通用背板的特点？<br>A: 双总线设计，PCI 总线支持 IC695 模块，串行总线支持 IC694 模块，可在同一背板上混用。</li>
+<li>Q: PME 支持哪些编程语言？<br>A: LD、ST、FBD、IL、SFC 五种 IEC 61131-3 标准语言。</li>
+<li>Q: SRTP 和 OPC UA 的区别？<br>A: SRTP 是 GE 私有协议，仅限 GE 设备间通信；OPC UA 是工业标准，支持跨平台跨厂商。</li>
+<li>Q: Cimplicity 的点位采集方式？<br>A: 通过 Device 配置连接 PLC，每个 Point 映射到 PLC 地址，按设定的 Scan Rate 周期性读取。</li>
+</ul>
+</div>
+</body>
+</html>
