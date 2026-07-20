@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RX3i学习">
+<title>艾默生 RX3i</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,16213e 50%,#0f3460 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.container{max-width:480px;width:100%}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.5);font-size:14px;text-decoration:none;margin-bottom:24px}
+.back-link:active{color:rgba(255,255,255,.8)}
+.header{text-align:center;margin-bottom:36px}
+.header h1{color:#fff;font-size:26px;font-weight:700;letter-spacing:1px}
+.header p{color:rgba(255,255,255,.4);font-size:13px;margin-top:8px}
+.card{background:rgba(255,255,255,.08);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:28px 24px;margin-bottom:16px;text-decoration:none;display:flex;align-items:center;gap:18px;transition:all .3s ease;cursor:pointer}
+.card:active{transform:scale(.97);background:rgba(255,255,255,.15)}
+.card-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.card-body{flex:1}
+.card-title{color:#fff;font-size:18px;font-weight:600;margin-bottom:4px}
+.card-desc{color:rgba(255,255,255,.45);font-size:13px;line-height:1.4}
+.card-arrow{color:rgba(255,255,255,.3);font-size:22px}
+.footer{text-align:center;margin-top:30px;color:rgba(255,255,255,.25);font-size:12px}
+</style>
+</head>
+<body>
+<div class="container">
+<a href="index.html" class="back-link">‹ 返回</a>
+<div class="header">
+<h1>艾默生 RX3i</h1>
+<p>PACSystems · PME · Cimplicity</p>
+</div>
+<a href="rx3i_knowledge.html" class="card">
+<div class="card-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">📚</div>
+<div class="card-body">
+<div class="card-title">知识点详解</div>
+<div class="card-desc">硬件架构/CPU/I/O/PME编程/通信/Cimplicity/调试维护</div>
+</div>
+<div class="card-arrow">›</div>
+</a>
+<a href="rx3i_guide.html" class="card">
+<div class="card-icon" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">📖</div>
+<div class="card-body">
+<div class="card-title">学习指南</div>
+<div class="card-desc">四阶段学习路线/练习项目/学习资源/重点速记</div>
+</div>
+<div class="card-arrow">›</div>
+</a>
+<div class="footer">Emerson PACSystems RX3i 学习工具</div>
+</div>
+</body>
+</html>
