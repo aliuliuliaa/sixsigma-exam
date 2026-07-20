@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RX3i知识">
+<title>RX3i 知识点详解</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.7;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+.header{text-align:center;padding:24px 0 16px;position:sticky;top:0;background:#0d1117;z-index:100;border-bottom:1px solid #21262d}
+.header h1{font-size:22px;color:#58a6ff}
+.header p{font-size:13px;color:#6e7681;margin-top:4px}
+.back-link{display:inline-block;color:#58a6ff;font-size:14px;text-decoration:none;margin-bottom:12px}
+.nav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:8px 0 16px}
+.nav-item{padding:6px 14px;background:#161b22;border:1px solid #21262d;border-radius:16px;font-size:12px;color:#8b949e;cursor:pointer;white-space:nowrap;transition:all .2s}
+.nav-item.active{background:#1f6feb;border-color:#388bfd;color:#fff}
+.section{margin-bottom:32px;scroll-margin-top:80px}
+.section-title{font-size:18px;color:#58a6ff;font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:8px}
+.section-icon{font-size:22px}
+.card{background:#161b22;border:1px solid #21262d;border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{font-size:15px;color:#f0f6fc;margin-bottom:8px}
+.card p,.card li{font-size:14px;color:#8b949e}
+.card ul{padding-left:18px;margin:8px 0}
+.card li{margin-bottom:4px}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-right:4px}
+.tag-cpu{background:rgba(239,68,68,.15);color:#f87171}
+.tag-io{background:rgba(59,130,246,.15);color:#60a5fa}
+.tag-com{background:rgba(16,185,129,.15);color:#34d399}
+.tag-sw{background:rgba(168,85,247,.15);color:#c084fc}
+.tag-scada{background:rgba(245,158,11,.15);color:#fbbf24}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
+th{background:#21262d;color:#c9d1d9;padding:8px;text-align:left;border:1px solid #30363d}
+td{padding:8px;border:1px solid #21262d;color:#8b949e}
+code{background:#21262d;padding:2px 6px;border-radius:4px;font-size:13px;color:#f0883e;font-family:Consolas,monospace}
+.formula{background:#161b22;border-left:3px solid #1f6feb;padding:12px 16px;margin:8px 0;border-radius:0 8px 8px 0;font-family:Consolas,monospace;font-size:13px;color:#7ee787}
+.note{background:rgba(31,110,235,.08);border:1px solid rgba(31,110,235,.2);border-radius:8px;padding:12px;margin:8px 0;font-size:13px;color:#8b949e}
+.note::before{content:"💡 ";font-size:14px}
+.warn{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:12px;margin:8px 0;font-size:13px;color:#f87171}
+.warn::before{content:"⚠️ ";font-size:14px}
+</style>
+</head>
+<body>
+<div class="header">
+<a href="rx3i.html" class="back-link">‹ 返回</a>
+<h1>RX3i 知识点详解</h1>
+<p>PACSystems RX3i · PME · Cimplicity</p>
+<div class="nav">
+<span class="nav-item active" onclick="go('s1')">硬件架构</span>
+<span class="nav-item" onclick="go('s2')">CPU详解</span>
+<span class="nav-item" onclick="go('s3')">I/O系统</span>
+<span class="nav-item" onclick="go('s4')">PME编程</span>
+<span class="nav-item" onclick="go('s5')">通信网络</span>
+<span class="nav-item" onclick="go('s6')">Cimplicity</span>
+<span class="nav-item" onclick="go('s7')">调试维护</span>
+</div>
+</div>
+
+<!-- 1. 硬件架构 -->
+<div class="section" id="s1">
+<div class="section-title"><span class="section-icon">🖥️</span>一、硬件架构</div>
+<div class="card">
+<h3>PACSystems 系列定位</h3>
+<p>RX3i 属于 Emerson（原 GE Fanuc）PACSystems 家族，是 <strong>PAC（可编程自动化控制器）</strong>，不是传统 PLC。融合了 PLC 的确定性控制 + DCS 的系统级管理 + 计算机的开放性。</p>
+<ul>
+<li><strong>RX7i</strong>：高端机架式，VME 总线，大型过程控制</li>
+<li><strong>RX3i</strong>：中端机架式，PCI 总线，中小型应用最常用</li>
+<li><strong>RSTi-EP</strong>：紧凑型，IP20 导轨安装</li>
+</ul>
+</div>
+<div class="card">
+<h3>RX3i 背板系统</h3>
+<table>
+<tr><th>背板类型</th><th>总线</th><th>槽数</th><th>说明</th></tr>
+<tr><td>通用背板</td><td>PCI（双总线）</td><td>10/16槽</td><td>支持 IC695* 和 IC694* 模块混插</td></tr>
+<tr><td>串行扩展背板</td><td>串行总线</td><td>最多16槽</td><td>通过扩展电缆连接，距离最远100m</td></tr>
+</table>
+<div class="note">通用背板有两条独立总线：PCI 总线（高速，给 IC695 模块用）和串行总线（给 IC694 模块用），可在同一背板上混用两代模块。</div>
+</div>
+<div class="card">
+<h3>电源模块</h3>
+<ul>
+<li><code>IC695PSD040</code>：120/240VAC，40W</li>
+<li><code>IC695PSD140</code>：120/240VAC，40W（增强版）</li>
+<li><code>IC695PSA040</code>：24VDC，40W</li>
+<li><code>IC695PSA140</code>：24VDC，40W（增强版，支持更多背板负载）</li>
+</ul>
+<div class="warn">电源功率必须 ≥ 背板上所有模块功耗之和，建议预留 20% 余量。</div>
+</div>
+</div>
+
+<!-- 2. CPU 详解 -->
+<div class="section" id="s2">
+<div class="section-title"><span class="section-icon">🧠</span>二、CPU 详解</div>
+<div class="card">
+<h3><span class="tag tag-cpu">CPU</span>CPU 型号对比</h3>
+<table>
+<tr><th>型号</th><th>类型</th><th>扫描速度</th><th>用户内存</th><th>特点</th></tr>
+<tr><td>IC695CPE305</td><td>300MHz</td><td>0.15ms/K</td><td>5MB</td><td>经济型，中小项目</td></tr>
+<tr><td>IC695CPE310</td><td>1GHz</td><td>0.007ms/K</td><td>5MB</td><td>主流型，性价比高</td></tr>
+<tr><td>IC695CPE330</td><td>1GHz 双核</td><td>极快</td><td>10MB</td><td>高性能，复杂控制</td></tr>
+<tr><td>IC695CPE400</td><td>1.8GHz</td><td>极快</td><td>10MB</td><td>旗舰型，运动控制</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>CPU 内置接口</h3>
+<ul>
+<li><strong>以太网口</strong>（CPE310/330/400）：支持 SRTP、Modbus TCP、EGD、OPC UA</li>
+<li><strong>串口</strong>（RS-232）：支持 SNP、Modbus RTU</li>
+<li><strong>USB 口</strong>：编程调试用（不支持运行时连接）</li>
+<li><strong>PROFINET</strong>：需配 PNC001 模块实现</li>
+</ul>
+</div>
+<div class="card">
+<h3>CPU 工作模式</h3>
+<table>
+<tr><th>模式</th><th>说明</th></tr>
+<tr><td>STOP</td><td>停止执行用户程序，I/O 不更新</td></tr>
+<tr><td>RUN</td><td>正常执行用户程序，I/O 正常更新</td></tr>
+<tr><td>RUN-IO-Disabled</td><td>执行程序但 I/O 不输出（调试用）</td></tr>
+<tr><td>STOP-IO-Enabled</td><td>程序不执行但 I/O 保持输出（维护用）</td></tr>
+</table>
+<div class="note">模式切换可通过 PME 软件、CPU 面板开关或系统变量 %S 实现。</div>
+</div>
+<div class="card">
+<h3>内存区域分配</h3>
+<table>
+<tr><th>区域</th><th>前缀</th><th>说明</th></tr>
+<tr><td>%I</td><td>离散输入</td><td>来自输入模块的状态</td></tr>
+<tr><td>%Q</td><td>离散输出</td><td>控制输出模块</td></tr>
+<tr><td>%M</td><td>内部线圈</td><td>中间变量，断电保持可设</td></tr>
+<tr><td>%AI</td><td>模拟输入</td><td>来自模拟量输入模块</td></tr>
+<tr><td>%AQ</td><td>模拟输出</td><td>控制模拟量输出模块</td></tr>
+<tr><td>%R</td><td>寄存器</td><td>数据存储，断电保持可设</td></tr>
+<tr><td>%T</td><td>定时器</td><td>定时器当前值/状态</td></tr>
+<tr><td>%S</td><td>系统状态</td><td>系统内置变量（只读）</td></tr>
+<tr><td>%SA/%SB/%SC</td><td>系统状态</td><td>断电保持/时钟/故障状态</td></tr>
+<tr><td>%G</td><td>全局数据</td><td>EGD 全局数据交换</td></tr>
+</table>
+</div>
+</div>
+
+<!-- 3. I/O 系统 -->
+<div class="section" id="s3">
+<div class="section-title"><span class="section-icon">🔌</span>三、I/O 系统</div>
+<div class="card">
+<h3><span class="tag tag-io">I/O</span>模块系列</h3>
+<table>
+<tr><th>系列</th><th>背板接口</th><th>说明</th></tr>
+<tr><td>IC695 系列</td><td>PCI 总线</td><td>RX3i 原生模块，高速高诊断</td></tr>
+<tr><td>IC694 系列</td><td>串行总线</td><td>90-30 兼容模块，可混用</td></tr>
+<tr><td>IC693 系列</td><td>串行总线</td><td>90-30 模块，有限支持</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>常用 I/O 模块</h3>
+<table>
+<tr><th>型号</th><th>类型</th><th>规格</th></tr>
+<tr><td>IC695MDL655</td><td>DI</td><td>32点 24VDC 输入</td></tr>
+<tr><td>IC695MDL754</td><td>DO</td><td>32点 24VDC 输出</td></tr>
+<tr><td>IC695ALG600</td><td>AI</td><td>8通道 通用模拟输入</td></tr>
+<tr><td>IC695ALG704</td><td>AQ</td><td>4通道 模拟输出</td></tr>
+<tr><td>IC695HSC304</td><td>HSC</td><td>高速计数器</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>I/O 寻址方式</h3>
+<p>RX3i 支持两种寻址方式：</p>
+<ul>
+<li><strong>机架-槽位寻址</strong>：<code>%I00001</code> 对应机架0、槽位1的输入点0</li>
+<li><strong>别名引用</strong>：在 PME 中给地址取变量名，如 <code>Start_Button</code> 映射到 <code>%I00001</code></li>
+</ul>
+<div class="formula">%I 机架(1位) 槽位(2位) 点号(2位)<br>%I 0 01 01 = 机架0 槽位1 点01<br>%AI 机架(1位) 槽位(2位) 通道(2位)</div>
+<div class="note">推荐使用别名引用，程序可读性更好，修改硬件时不用改程序。</div>
+</div>
+<div class="card">
+<h3>I/O 诊断功能</h3>
+<ul>
+<li>模块级：电源故障、接线故障、短路/断路检测</li>
+<li>通道级：每个通道独立的诊断状态字</li>
+<li>热插拔：IC695 系列支持带电更换模块</li>
+<li>故障状态映射到 <code>%SA/%SB</code> 系统变量</li>
+</ul>
+</div>
+</div>
+
+<!-- 4. PME 编程 -->
+<div class="section" id="s4">
+<div class="section-title"><span class="section-icon">💻</span>四、PME 编程软件</div>
+<div class="card">
+<h3><span class="tag tag-sw">PME</span>软件概述</h3>
+<p><strong>PAC Machine Edition (PME)</strong>（原 Proficy Machine Edition）是 Emerson 的统一工程环境，集成了：</p>
+<ul>
+<li><strong>Logic Developer - PLC</strong>：PLC 编程（LD/ST/FBD/IL/SFC）</strong></li>
+<li><strong>Logic Developer - Motion</strong>：运动控制编程</li>
+<li><strong>View Developer</strong>：操作面板画面开发</li>
+<li><strong>Navigator</strong>：项目管理导航器</li>
+</ul>
+</div>
+<div class="card">
+<h3>五种编程语言</h3>
+<table>
+<tr><th>语言</th><th>全称</th><th>适用场景</th></tr>
+<tr><td>LD</td><td>Ladder Diagram 梯形图</td><td>逻辑控制、继电器逻辑（最常用）</td></tr>
+<tr><td>ST</td><td>Structured Text 结构化文本</td><td>数学运算、数据处理、复杂算法</td></tr>
+<tr><td>FBD</td><td>Function Block Diagram 功能块图</td><td>过程控制、闭环控制</td></tr>
+<tr><td>IL</td><td>Instruction List 指令表</td><td>类似汇编（使用较少）</td></tr>
+<tr><td>SFC</td><td>Sequential Function Chart 顺序功能图</td><td>流程控制、状态机</td></tr>
+</table>
+<div class="note">实际工程中最常用的是 LD + ST 混合编程：主逻辑用 LD，数据处理和通信用 ST。</div>
+</div>
+<div class="card">
+<h3>PME 项目结构</h3>
+<div class="formula">Project (工程)<br>├─ Target (目标设备: RX3i CPU)<br>│  ├─ Hardware Configuration (硬件配置)<br>│  ├─ Logic (程序)<br>│  │  ├─ Main Program (主程序 _Main)<br>│  │  │  ├─ Phase 1 (程序块)<br>│  │  │  └─ Phase 2<br>│  │  └─ Subroutine (子程序)<br>│  ├─ Variables (变量表)<br>│  └─ Reference View (交叉引用)<br>└─ HMI (操作面板)</div>
+</div>
+<div class="card">
+<h3>常用梯形图指令</h3>
+<table>
+<tr><th>指令</th><th>功能</th><th>示例</th></tr>
+<tr><td>NO CONTACT</td><td>常开触点</td><td>--[ ]--</td></tr>
+<tr><td>NC CONTACT</td><td>常闭触点</td><td>--[/]--</td></tr>
+<tr><td>COIL</td><td>输出线圈</td><td>--( )--</td></tr>
+<tr><td>SET COIL</td><td>置位</td><td>--(S)--</td></tr>
+<tr><td>RESET COIL</td><td>复位</td><td>--(R)--</td></tr>
+<tr><td>TMR</td><td>定时器</td><td>T_1: 100ms 基准</td></tr>
+<tr><td>CNT</td><td>计数器</td><td>C_1: 递增计数</td></tr>
+<tr><td>MATH</td><td>数学运算</td><td>%R1 = %R2 + %R3</td></tr>
+<tr><td>MOVE</td><td>数据传送</td><td>%R1 → %R2</td></tr>
+<tr><td>CMP</td><td>比较</td><td>%R1 > %R2</td></tr>
+<tr><td>JUMP</td><td>跳转</td><td>JMP #LBL1</td></tr>
+<tr><td>CALL</td><td>调用子程序</td><td>CALL SUB_1</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>定时器与计数器</h3>
+<p><strong>定时器（%T）：</strong></p>
+<ul>
+<li>基准时间：1ms / 10ms / 100ms / 1s</li>
+<li>当前值在 <code>%Tnnnn</code> 寄存器</li>
+<li>状态位在 <code>%Tnnnn</code> 对应的离散位</li>
+</ul>
+<div class="formula">TMR T1: 100ms * 50 → 5秒定时<br>// %T1.Current = 0~50<br>// %T1.Status = 1 当计时到达</div>
+<p><strong>计数器（%C... 不，RX3i 用通用寄存器实现）：</strong></p>
+<p>RX3i 没有专用计数器指令，用 <code>MATH</code> + 比较指令实现：</p>
+<div class="formula">%R10 = %R10 + 1  // 每次触发加1<br>// 比较判断：<br>// CMP %R10 >= 10 → SET Coils</div>
+</div>
+<div class="card">
+<h3>变量与数据类型</h3>
+<table>
+<tr><th>类型</th><th>位数</th><th>范围</th></tr>
+<tr><td>BIT/BOOL</td><td>1</td><td>0 或 1</td></tr>
+<tr><td>INT (WORD)</td><td>16</td><td>0 ~ 65535 (无符号) / -32768 ~ 32767 (有符号)</td></tr>
+<tr><td>DINT (DWORD)</td><td>32</td><td>-2^31 ~ 2^31-1</td></tr>
+<tr><td>REAL</td><td>32</td><td>浮点数 IEEE 754</td></tr>
+<tr><td>LREAL</td><td>64</td><td>双精度浮点</td></tr>
+<tr><td>STRING</td><td>可变</td><td>ASCII 字符串</td></tr>
+</table>
+<div class="note">PME 中变量声明在 Navigator 的 Var. 标签页，可以指定地址映射、数据类型、断电保持等属性。</div>
+</div>
+<div class="card">
+<h3>程序执行流程</h3>
+<div class="formula">上电 → 读取硬件配置 → 初始化I/O<br>↓<br>┌─→ 读取输入 (%I, %AI)<br>│   ↓<br>│   执行用户程序 (_Main → 各程序块)<br>│   ↓<br>│   写入输出 (%Q, %AQ)<br>│   ↓<br>│   通信处理 (SRTP/EGD/Modbus)<br>│   ↓<br>└─── 循环 (扫描周期)<br><br>// 默认扫描周期: 10ms~50ms (取决于程序大小)<br>// 可设定固定扫描周期 (Watchdog 超时报警)</div>
+</div>
+<div class="card">
+<h3>常用系统变量 (%S)</h3>
+<table>
+<tr><th>变量</th><th>说明</th></tr>
+<tr><td>%S0001</td><td>始终为 ON (1Hz 闪烁的第一拍)</td></tr>
+<tr><td>%S0002</td><td>始终为 ON</td></tr>
+<tr><td>%S0003</td><td>始终为 OFF</td></tr>
+<tr><td>%S0004</td><td>1Hz 方波 (0.5s ON / 0.5s OFF)</td></tr>
+<tr><td>%S0005</td><td>1秒脉冲</td></tr>
+<tr><td>%S0009</td><td>诊断状态（0=正常, 1=有故障）</td></tr>
+<tr><td>%S0010</td><td>IO 模块故障</td></tr>
+<tr><td>%S0013</td><td>CPU 电池低</td></tr>
+<tr><td>%S0034</td><td>首次扫描脉冲（仅第一个扫描周期为ON）</td></tr>
+<tr><td>%S0036</td><td>CPU 在 RUN 模式</td></tr>
+</table>
+</div>
+</div>
+
+<!-- 5. 通信网络 -->
+<div class="section" id="s5">
+<div class="section-title"><span class="section-icon">📡</span>五、通信网络</div>
+<div class="card">
+<h3><span class="tag tag-com">COMM</span>支持的通信协议</h3>
+<table>
+<tr><th>协议</th><th>端口</th><th>用途</th></tr>
+<tr><td>SRTP</td><td>TCP 18245</td><td>GE/Emerson 设备间通信（私有协议）</td></tr>
+<tr><td>Modbus TCP</td><td>TCP 502</td><td>与第三方设备通信（标准协议）</td></tr>
+<tr><td>EGD</td><td>UDP 18246</td><td>Ethernet Global Data 广播通信</td></tr>
+<tr><td>OPC UA</td><td>TCP 4840</td><td>与上位机/SCADA 标准接口</td></tr>
+<tr><td>PROFINET</td><td>—</td><td>实时以太网（需 PNC001 模块）</td></tr>
+<tr><td>Modbus RTU</td><td>RS-485</td><td>串行 Modbus 通信</td></tr>
+<tr><td>SNP</td><td>RS-232</td><td>GE 串行协议（老系统兼容）</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>SRTP 通信配置</h3>
+<p>SRTP（Service Request Transport Protocol）是 GE/Emerson 私有协议，用于：</p>
+<ul>
+<li>PME 编程软件 ↔ CPU（上传/下载/调试）</li>
+<li>CPU ↔ CPU 之间的数据交换</li>
+<li>CPU ↔ Cimplicity 上位机数据采集</li>
+</ul>
+<div class="formula">// 配置步骤：<br>// 1. PME → Hardware Config → CPU → Ethernet Port<br>// 2. 设置 IP 地址、子网掩码、网关<br>// 3. 设置 PLC Name（Cimplicity 连接用）<br>// 4. 下载硬件配置到 CPU<br><br>// 连接数限制：<br>// CPE310: 最多 16 个 SRTP 连接<br>// CPE330: 最多 32 个 SRTP 连接</div>
+</div>
+<div class="card">
+<h3>EGD 广播通信</h3>
+<p>EGD（Ethernet Global Data）用于多台 PLC 之间的高速数据共享，基于 UDP 广播：</p>
+<ul>
+<li>一台 PLC 发送（Producer），多台接收（Consumer）</li>
+<li>周期性发送，典型 1ms~100ms</li>
+<li>数据存储在 <code>%G</code> 全局数据区</li>
+<li>适合：多 PLC 同步、状态广播</li>
+</ul>
+</div>
+<div class="card">
+<h3>Modbus TCP 通信</h3>
+<div class="formula">// CPU 作为 Modbus TCP Server (从站)<br>// 端口: 502<br>// 地址映射:<br>//   %I → Coil (0x)<br>//   %Q → Coil (0x) / Holding Reg (4x)<br>//   %AI → Input Reg (3x) / Holding Reg (4x)<br>//   %R → Holding Register (4x)<br><br>// CPU 作为 Modbus TCP Client (主站)<br>// 使用 CHAN_FUNC 指令主动读写</div>
+</div>
+<div class="card">
+<h3>OPC UA Server</h3>
+<p>CPE310/330/400 内置 OPC UA Server，可直接与上位机通信：</p>
+<ul>
+<li>端口：4840（默认）</li>
+<li>安全模式：None / Sign / Sign&amp;Encrypt</li>
+<li>认证：匿名 / 用户名密码 / 证书</li>
+<li>地址空间：变量直接映射为 OPC UA 节点</li>
+</ul>
+<div class="note">OPC UA 是未来趋势，推荐新项目优先使用 OPC UA 替代 SRTP 连接上位机。</div>
+</div>
+</div>
+
+<!-- 6. Cimplicity -->
+<div class="section" id="s6">
+<div class="section-title"><span class="section-icon">📊</span>六、Cimplicity 上位机</div>
+<div class="card">
+<h3><span class="tag tag-scada">SCADA</span>Cimplicity 概述</h3>
+<p><strong>CIMPLICITY</strong> 是 Emerson 的 SCADA/HMI 上位机软件，用于：</p>
+<ul>
+<li>过程监控和数据采集</li>
+<li>报警和事件管理</li>
+<li>历史数据记录和趋势分析</li>
+<li>操作员界面（HMI）</li>
+<li>报表生成</li>
+</ul>
+</div>
+<div class="card">
+<h3>与 PLC 的连接方式</h3>
+<table>
+<tr><th>方式</th><th>协议</th><th>说明</th></tr>
+<tr><td>GE SRTP</td><td>SRTP (TCP 18245)</td><td>最常用，直连 RX3i CPU</td></tr>
+<tr><td>OPC UA</td><td>OPC UA (TCP 4840)</td><td>标准化接口，跨平台</td></tr>
+<tr><td>OPC DA</td><td>OPC DA (DCOM)</td><td>老方式，需 OPC Server 中间件</td></tr>
+<tr><td>Modbus TCP</td><td>Modbus (TCP 502)</td><td>简单数据采集</td></tr>
+</table>
+<div class="note">推荐：新项目用 OPC UA；老项目维护用 SRTP；与第三方设备用 Modbus TCP。</div>
+</div>
+<div class="card">
+<h3>Cimplicity 项目结构</h3>
+<div class="formula">Cimplicity Project<br>├─ Devices (设备)<br>│  └─ RX3i PLC (SRTP/OPC UA 连接)<br>├─ Points (点位)<br>│  ├─ Digital Points (数字量)<br>│  └─ Analog Points (模拟量)<br>├─ Screens (画面)<br>│  ├─ Main (主画面)<br>│  ├─ Alarm (报警画面)<br>│  └─ Trend (趋势画面)<br>├─ Alarms (报警配置)<br>│  ├─ Alarm Categories (报警分类)<br>│  └─ Alarm Messages (报警消息)<br>├─ Trends (趋势配置)<br>├─ Scripts (脚本: CimEdit Basic)<br>└─ Users (用户权限)</div>
+</div>
+<div class="card">
+<h3>点位（Point）配置</h3>
+<p>点位是 Cimplicity 与 PLC 数据的映射：</p>
+<table>
+<tr><th>属性</th><th>说明</th></tr>
+<tr><td>Point ID</td><td>点位唯一标识，如 TEMP_1</td></tr>
+<tr><td>Device</td><td>关联的 PLC 设备</td></tr>
+<tr><td>Address</td><td>PLC 地址，如 %R0001 或 R0001</td></tr>
+<tr><td>Type</td><td>数据类型：BIT/WORD/DWORD/REAL</td></tr>
+<tr><td>Scan Rate</td><td>采集周期(ms)，如 500ms</td></tr>
+<tr><td>Alarm Enabled</td><td>是否启用报警</td></tr>
+</table>
+<div class="formula">// 地址映射示例：<br>// PLC 地址 %R0001 → Cimplicity Point: TEMP_PV<br>// PLC 地址 %I00001 → Cimplicity Point: MOTOR_RUN<br>// PLC 地址 %AQ0001 → Cimplicity Point: VALVE_OUT</div>
+</div>
+<div class="card">
+<h3>画面开发 (CimEdit)</h3>
+<ul>
+<li><strong>图形对象</strong>：按钮、指示灯、仪表盘、管道、储罐等</li>
+<li><strong>动画绑定</strong>：对象属性绑定到 Point，如颜色随状态变化</li>
+<li><strong>脚本</strong>：CimEdit Basic 脚本，处理按钮点击、条件判断等</li>
+<li><strong>SmartObjects</strong>：可复用的智能对象组件</li>
+</ul>
+<div class="formula">// 常见动画绑定：<br>// 指示灯颜色：<br>//   Point = MOTOR_RUN<br>//   Color.Green when Point == 1<br>//   Color.Red when Point == 0<br><br>// 数值显示：<br>//   Point = TEMP_PV<br>//   Format = "##.#" ℃<br><br>// 按钮脚本：<br>//   Sub Button_Click()<br>//     SetPoint "MOTOR_START", 1<br>//   End Sub</div>
+</div>
+<div class="card">
+<h3>报警系统</h3>
+<table>
+<tr><th>报警类型</th><th>触发条件</th><th>示例</th></tr>
+<tr><td>高限报警</td><td>Point > High Limit</td><td>温度 > 80℃</td></tr>
+<tr><td>低限报警</td><td>Point < Low Limit</td><td>液位 < 10%</td></tr>
+<tr><td>高低高报警</td><td>Point > HighHigh Limit</td><td>温度 > 95℃（紧急）</td></tr>
+<tr><td>状态报警</td><td>离散点变化</td><td>电机故障 = ON</td></tr>
+<tr><td>偏差报警</td><td>|PV - SP| > Deadband</td><td>偏差 > 5%</td></tr>
+</table>
+<div class="note">报警分类用不同颜色区分：紧急(红)、高(橙)、中(黄)、低(蓝)、信息(绿)。</div>
+</div>
+<div class="card">
+<h3>趋势与历史数据</h3>
+<ul>
+<li><strong>实时趋势</strong>：显示最近 N 分钟数据，自动滚动</li>
+<li><strong>历史趋势</strong>：查询指定时间段数据，支持缩放</li>
+<li><strong>历史数据库</strong>：默认使用 Cimplicity 自带历史库，也可配置 SQL Server</li>
+<li><strong>采样周期</strong>：最小 1 秒，可配多级归档（秒→分钟→小时）</li>
+</ul>
+</div>
+</div>
+
+<!-- 7. 调试维护 -->
+<div class="section" id="s7">
+<div class="section-title"><span class="section-icon">🔧</span>七、调试与维护</div>
+<div class="card">
+<h3>PME 在线调试功能</h3>
+<table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr><td>在线监控</td><td>实时查看梯形图触点/线圈状态</td></tr>
+<tr><td>强制变量</td><td>强制 %I/%Q/%R 的值（调试用）</td></tr>
+<tr><td>写入变量</td><td>临时修改变量值</td></tr>
+<tr><td>断点调试</td><td>在指定程序行暂停执行</td></tr>
+<tr><td>单步执行</td><td>逐条指令执行</td></tr>
+<tr><td>交叉引用</td><td>查找变量的所有使用位置</td></tr>
+<tr><td>程序比较</td><td>在线程序与离线程序差异对比</td></tr>
+</table>
+<div class="warn">强制变量后忘记取消可能导致设备意外动作！调试结束后务必清除所有强制值。</div>
+</div>
+<div class="card">
+<h3>固件升级</h3>
+<ul>
+<li>通过 PME → Tools → Firmware Update</li>
+<li>支持 CPU、通信模块、I/O 模块固件升级</li>
+<li>升级前备份项目和硬件配置</li>
+<li>CPU 固件升级需在 STOP 模式下进行</li>
+</ul>
+</div>
+<div class="card">
+<h3>常见故障排查</h3>
+<table>
+<tr><th>现象</th><th>可能原因</th><th>排查方法</th></tr>
+<tr><td>CPU 无法连接</td><td>IP错误/网络不通/SRTP未使能</td><td>ping IP → 检查硬件配置</td></tr>
+<tr><td>I/O 模块红灯</td><td>接线错误/模块故障/背板接触</td><td>查看 %S0010 → 重新插拔模块</td></tr>
+<tr><td>程序无法下载</td><td>CPU 在 RUN / 密码保护</td><td>切换到 STOP → 检查权限</td></tr>
+<tr><td>扫描超时</td><td>程序过大/死循环/通信负载高</td><td>查看 CPU 诊断 → 优化程序</td></tr>
+<tr><td>电池报警</td><td>电池电量低/未装电池</td><td>更换 IC695ACC414 电池</td></tr>
+<tr><td>Cimplicity 读不到数据</td><td>设备配置错误/Point地址错</td><td>检查 Device 连接状态 → 验证地址</td></tr>
+</table>
+</div>
+<div class="card">
+<h3>备份与恢复</h3>
+<ul>
+<li><strong>项目备份</strong>：PME → File → Save As / Export</li>
+<li><strong>CPU 程序备份</strong>：上传在线程序到 PME</li>
+<li><strong>硬件配置备份</strong>：导出硬件配置文件</li>
+<li><strong>Cimplicity 备份</strong>：Project → Backup</li>
+</ul>
+<div class="note">建议每次修改后都做版本备份，并在注释中记录修改内容、日期、修改人。</div>
+</div>
+<div class="card">
+<h3>常用文档手册</h3>
+<table>
+<tr><th>文档编号</th><th>名称</th><th>用途</th></tr>
+<tr><td>GFK-2314</td><td>RX3i 系统手册</td><td>硬件安装与配置</td></tr>
+<tr><td>GFK-2950</td><td>CPU 参考手册</td><td>CPU 指令与功能</td></tr>
+<tr><td>GFK-2224</td><td>TCP/IP 以太网通信</td><td>网络配置</td></tr>
+<tr><td>GFK-1866</td><td>Logic Developer 编程</td><td>PME 编程指南</td></tr>
+<tr><td>GFK-1603</td><td>Cimplicity 用户指南</td><td>上位机开发</td></tr>
+</table>
+</div>
+</div>
+
+<script>
+function go(id){document.querySelectorAll('.section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));event.target.classList.add('active');window.scrollTo(0,document.body.scrollHeight===0?0:0)}
+// Show first section by default
+document.addEventListener('DOMContentLoaded',function(){document.getElementById('s1').style.display='block';document.querySelectorAll('.section:not(#s1)').forEach(s=>s.style.display='none')});
+</script>
+</body>
+</html>
